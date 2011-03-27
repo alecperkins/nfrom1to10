@@ -7,10 +7,10 @@ class Vote(db.Model):
     pick = db.IntegerProperty()             #num ms to first choice of num
     submit = db.IntegerProperty()           # num ms to submit of choice
     showed_random = db.BooleanProperty()    # True if "random" was said, False if not
-
+    ip = db.StringProperty()                # ip address of voter
 
 OPTIONS = ("input","radio","select","slider")
-def doVote(number, method, pick, submit, showed_random):
+def doVote(number, method, pick, submit, showed_random, ip=None):
     if number and method and pick and submit and showed_random:
         try:
             number = int(number)
@@ -30,6 +30,10 @@ def doVote(number, method, pick, submit, showed_random):
                 vote.pick = pick
                 vote.submit = submit
                 vote.showed_random = showed_random
+                if ip:
+                    vote.ip = ip
+                else:
+                    vote.ip = ""
                 vote.put()
                 return vote
         return None

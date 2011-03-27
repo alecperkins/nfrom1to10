@@ -18,8 +18,11 @@ class MainHandler(webapp.RequestHandler):
         pick = self.request.get("pick", None)
         submit = self.request.get("submit", None)
         showed_random = self.request.get("random", None)
+        
+        ip = self.request.remote_addr
+        
         result = { "status": "failed" }
-        if doVote(number, method, pick, submit, showed_random):
+        if doVote(number, method, pick, submit, showed_random, ip):
             result = { "status": "success" }
 
         self.response.headers["Content-Type"] = "application/javascript"

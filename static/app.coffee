@@ -47,6 +47,8 @@ sendVote = ->
             showError()
     error = ->
         showError()
+    if not current_pick
+        current_pick = 0
     data =
         number: current_number
         method: current_method

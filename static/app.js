@@ -46,6 +46,9 @@
     error = function() {
       return showError();
     };
+    if (!current_pick) {
+      current_pick = 0;
+    }
     data = {
       number: current_number,
       method: current_method,

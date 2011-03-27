@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en-us">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        
+        <title>Pick a number from 1 to 10</title>
+
+        <style type="text/css">
+            html {
+                width: 960px;
+                margin: 0 auto;
+            }
+            body {
+                color: #333;
+                font-family: Helvetica, Arial, sans-serif;
+                margin: 0 auto;
+                width: 600px;
+            }
+            body > div {
+                display: none;
+            }
+            h1 {
+                font-size: 4em;
+                text-align: center;
+                position: relative;
+            }
+            h1 p#instructions {
+                position: absolute;
+                right: -0.5em;
+                text-align: left;
+                font-size: 0.4em;
+                width: 11em;
+                margin: 0 auto;
+                top: 5em;
+                color: #999;
+                display: none;
+            }
+            h1 > div {
+                display: inline-block;
+                cursor: pointer;
+            }
+            h1 > div:hover {
+                color: #D93312;
+            }
+            h1 > div:hover p#instructions {
+                display: block;
+            }
+            button {
+                font-size: 3em;
+                font-family: inherit;
+                display: block;
+                margin: 0 auto;
+                height: 2em;
+                width: 5em;
+                cursor: pointer;
+                background: black;
+                color: white;
+                border: 0;
+                border-radius: 1em;
+                -moz-border-radius: 1em;
+                -webkit-border-radius: 1em;
+            }
+            button:hover {
+                background: #D93312;
+            }
+            button:active {
+                background: black;
+                color: white;
+            }
+            img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: none;
+            }
+            
+            #badge {
+                position: absolute;
+                display: block;
+                font-size: 1.6em;
+                font-weight: bold;
+                background: black;
+                color: white;
+                top: 2.5em;
+                left: -3em;
+                width: 12em;
+                padding: 0.25em;
+                text-align: center;
+                transform: rotate(-45deg);
+                -moz-transform: rotate(-45deg);
+                -webkit-transform: rotate(-45deg);
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <span id="badge">For SCIENCE!</span>
+        
+        <h1>Pick a number from 1 to 10<div><sup>*<sup>
+            <p id="instructions">
+                For all you pedants out there, that's choose from the set of [1,2,3,4,5,6,7,8,9,10]
+            </p></div>
+        </h1>
+        
+        
+        <div id="method-input" style="display: block;">
+            <input type="text" placeholder="Please enter a number">
+        </div>
+        
+        <div id="method-slider">
+            1 <div id="choice-slider"></div> 10
+        </div>
+        
+        <div id="method-radio">
+            <input type="radio" name="choice" value="1"> 1
+            <input type="radio" name="choice" value="2"> 2
+            <input type="radio" name="choice" value="3"> 3
+            <input type="radio" name="choice" value="4"> 4
+            <input type="radio" name="choice" value="5"> 5
+            <input type="radio" name="choice" value="6"> 6
+            <input type="radio" name="choice" value="7"> 7
+            <input type="radio" name="choice" value="8"> 8
+            <input type="radio" name="choice" value="9"> 9
+            <input type="radio" name="choice" value="10"> 10
+        </div>
+        
+        <div id="method-select">
+            <select>
+                <option value="-">-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+        
+        <button>Choose <span></span></button>
+        
+        
+        <div id="done">Science thanks you.</div>
+    </body>
+
+</html>
+

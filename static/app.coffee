@@ -32,6 +32,7 @@ showDone = ->
     $("h1").hide()
     $("#methods").hide()
     $("button").hide()
+    $("#results-link").hide()
     $("#done").show()
 
 showError = ->

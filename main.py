@@ -7,11 +7,21 @@ from django.utils import simplejson
 from models import Vote, doVote, Stat
 
 
+def getCachedPage(key):
+    cached_data = memcache.get(key)
+    if cached_data is not None:
+        page = cached_data
+    else:
+        f = open(key)
+        page = f.read()
+        memcache.set(key,page,1800)
+        f.close()
+    return page
+
 class MainHandler(webapp.RequestHandler):
     def get(self):
-        page = open("index.html")
-        self.response.out.write(page.read())
-        page.close()
+        page = getCachedPage("index.html")
+        self.response.out.write(page)
 
     def post(self):
         number = self.request.get("number", None)
@@ -32,9 +42,8 @@ class MainHandler(webapp.RequestHandler):
 
 class ResultHandler(webapp.RequestHandler):
     def get(self):
-        page = open("results.html")
-        self.response.out.write(page.read())
-        page.close()
+        page = getCachedPage("results.html")
+        self.response.out.write(page)
 
 
 class DataHandler(webapp.RequestHandler):
@@ -64,7 +73,7 @@ class DataHandler(webapp.RequestHandler):
                     random_text = "random_not_specified"
                 result[stat.method][random_text]["data"][stat.number-1] = stat.count
                 result[stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
-            memcache.add("results-data", result, 3600)
+            memcache.add("results-data", result, 1800)
         self.response.headers["Content-Type"] = "application/javascript"
         self.response.out.write(simplejson.dumps(result))
 

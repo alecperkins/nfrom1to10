@@ -27,6 +27,7 @@
     $("h1").hide();
     $("#methods").hide();
     $("button").hide();
+    $("#results-link").hide();
     return $("#done").show();
   };
   showError = function() {

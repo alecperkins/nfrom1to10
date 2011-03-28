@@ -51,3 +51,11 @@ class Stat(db.Model):
     count = db.IntegerProperty()
     generated = db.DateTimeProperty()
     showed_random = db.BooleanProperty()
+
+class InvalidNumCount(db.Model):
+    method = db.StringProperty()
+    number = db.IntegerProperty()
+    ips = db.StringListProperty()
+    count = db.IntegerProperty()
+    generated = db.DateTimeProperty()
+    showed_random = db.BooleanProperty()

@@ -8,18 +8,17 @@
         <script type="text/javascript">var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-11028399-7']); _gaq.push(['_trackPageview']);</script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js" type="text/javascript"></script>
         <script src="/static/jquery.flot.min.js" type="text/javascript"></script>
+
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="icon" type="image/png" href="/static/favicon.png">
         <style type="text/css">
             .graph {
                 width: 650px;
                 height: 300px;
+                margin-bottom: 2em;
             }
             h1 {
                 display: block;
-            }
-            h2 {
-                margin-top: 2em;
             }
             img {
                 display: block;
@@ -32,6 +31,22 @@
             }
             #graphs {
                 display: none;
+            }
+            #footer {
+                font-size: 12px;
+                text-align: center;
+                margin: 20px auto;
+            }
+            #footer a {
+                font-weight: bold;
+                color: black;
+                text-decoration: none;
+            }
+            #footer a:hover {
+                color: #D93312;
+            }
+            #footer span {
+                opacity: 0.5;
             }
         </style>
     </head>
@@ -62,7 +77,11 @@
             <img src="/static/results-radio.png">
             <div id="radio-graph" class="graph"></div>
         </div>
-        <script src="/static/graph.js" type="text/javascript"></script>
+        <script src="/static/graph-min.js" type="text/javascript"></script>
+        <div id="footer">
+            <a href="http://alecperkins.net" target="_blank" title="Alec Perkins: Designer with a coding problem">Who?</a>
+            <span>Why? (coming soon!)</span>
+        </div>
     </body>
 
 </html>

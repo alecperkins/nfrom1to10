@@ -1,7 +1,7 @@
 from google.appengine.ext import db
 from google.appengine.api.labs import taskqueue
 
-from models import Vote, StatMethod
+from models import Vote, Stat
 OPTIONS = ("input","radio","select","slider")
 
 from google.appengine.ext import webapp
@@ -11,41 +11,47 @@ from datetime import datetime
 
 class TaskHandler(webapp.RequestHandler):
     def get(self):
+        self.response.out.write("%s<br><br>" % datetime.now())
         for method in OPTIONS:
             for number in range(1,11):
-                if number and method:
+                for random_text in ["random",""]:
                     number = int(number)
                     params = {
                         "number": number,
                         "method": method,
                         "refresh": True,
+                        "random_text": random_text,
                     }
                     taskqueue.add(url="/tasks", params=params)
-                    self.response.out.write("%s-%s<br>x" % (number, method))
-                else:
-                    self.response.out.write("no params")
+                    self.response.out.write("%s-%s-%s<br>" % (number, method, random_text))
 
     def post(self):
         method = self.request.get("method", None)
         number = self.request.get("number", None)
         cursor = self.request.get("cursor", None)
         refresh = self.request.get("refresh", None)
+        random_text = self.request.get("random_text", "")
         
         try:
             number = int(number)
         except:
             number = None
         
+        if random_text == "random":
+            showed_random = True
+        else:
+            showed_random = False
+        
+        
         if method and number and method in OPTIONS:
-            key_name = "%s-%s" % (method, number)
-            stat = StatMethod.get_or_insert(key_name)
-            import logging
-            logging.info(method)
-            logging.info(number)
+            # key_name = "%s-%s" % (method, number)
+            key_name = "%s-%s-%s" % (method, number, showed_random)
+            stat = Stat.get_or_insert(key_name)
             
             q = Vote.all()
             q.filter("method =", method)
             q.filter("number =", number)
+            q.filter("showed_random =", showed_random)
 
             if cursor:
                 q.with_cursor(cursor)
@@ -56,16 +62,16 @@ class TaskHandler(webapp.RequestHandler):
             stat.count = stat.count + count
             stat.method = method
             stat.number = number
+            stat.showed_random = showed_random
             stat.generated = datetime.now()
             stat.put()
-            logging.error(stat.method)
-            logging.error(stat.number)
-            logging.error(stat.count)
+
             if next_cursor:
                 params = {
                     "number": number,
                     "method": method,
                     "cursor": next_cursor,
+                    "random_text": random_text,
                 }
                 taskqueue.add(url="/tasks", params=params)
 

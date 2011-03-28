@@ -4,7 +4,7 @@ class Vote(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
     number = db.IntegerProperty()           # number chosen, of {1,2,3...10}
     method = db.StringProperty()            # "input", "select", "slider", "radio"
-    pick = db.IntegerProperty()             #num ms to first choice of num
+    pick = db.IntegerProperty()             # num ms to first choice of num
     submit = db.IntegerProperty()           # num ms to submit of choice
     showed_random = db.BooleanProperty()    # True if "random" was said, False if not
     ip = db.StringProperty()                # ip address of voter
@@ -45,8 +45,9 @@ class StatMethod(db.Model):
     count = db.IntegerProperty()
     generated = db.DateTimeProperty()
 
-class StatRandom(db.Model):
-    random = db.BooleanProperty()
+class Stat(db.Model):
+    method = db.StringProperty()
     number = db.IntegerProperty()
     count = db.IntegerProperty()
     generated = db.DateTimeProperty()
+    showed_random = db.BooleanProperty()

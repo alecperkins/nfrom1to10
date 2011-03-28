@@ -18,7 +18,7 @@
     });
   };
   drawGraphs = function() {
-    var graph_boxes, graph_data, graph_opts, i, method, overall_opts, results, sum;
+    var graph_boxes, graph_data, graph_opts, i, label, method, overall_opts, random_specified, res, results, sum, _i, _len, _ref;
     $("#spinner").hide();
     graph_boxes = {
       overall: $("#overview-graph"),
@@ -28,30 +28,39 @@
       slider: $("#slider-graph")
     };
     $("#graphs").show();
-    generated = new Date(data.input.generated);
+    generated = data.input.random_not_specified.generated;
     sum = 0;
     for (method in data) {
       results = data[method];
-      for (i = 1; i <= 10; i++) {
-        overall_data[i - 1][1] += results.data[i - 1];
-        sum += results.data[i - 1];
-      }
-      graph_data = (function() {
-        var _results;
-        _results = [];
+      graph_opts = [];
+      _ref = ["random_specified", "random_not_specified"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        random_specified = _ref[_i];
+        res = results[random_specified];
+        label = random_specified.replace(/_/g, " ");
         for (i = 1; i <= 10; i++) {
-          _results.push([i, results.data[i - 1]]);
+          overall_data[i - 1][1] += res.data[i - 1];
+          sum += res.data[i - 1];
         }
-        return _results;
-      })();
-      graph_opts = {
-        bars: {
-          show: true,
-          align: "center"
-        },
-        data: graph_data
-      };
-      $.plot(graph_boxes[method], [graph_opts]);
+        graph_data = (function() {
+          var _results;
+          _results = [];
+          for (i = 1; i <= 10; i++) {
+            _results.push([i, res.data[i - 1]]);
+          }
+          return _results;
+        })();
+        graph_opts.push({
+          label: label,
+          bars: {
+            show: true,
+            align: "center",
+            barwidth: 0.1
+          },
+          data: graph_data
+        });
+      }
+      $.plot(graph_boxes[method], graph_opts);
     }
     overall_opts = {
       bars: {
@@ -61,7 +70,7 @@
       data: overall_data
     };
     $.plot(graph_boxes.overall, [overall_opts]);
-    return $("#as-of").html("For now, here's a preliminary breakdown as of <strong>" + (generated.toGMTString()) + "</strong><br>Total votes: <strong>" + sum + "</strong>");
+    return $("#as-of").html("For now, here's a preliminary breakdown as of <strong>" + generated + "</strong><br>Total votes: <strong>" + sum + "</strong>");
   };
   init = function() {
     return getData();

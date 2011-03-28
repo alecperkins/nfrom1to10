@@ -1,9 +1,10 @@
+from google.appengine.api import memcache
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 from django.utils import simplejson
 
-from models import Vote, doVote, StatMethod
+from models import Vote, doVote, Stat
 
 
 class MainHandler(webapp.RequestHandler):
@@ -47,21 +48,34 @@ class DataHandler(webapp.RequestHandler):
             "slider":{},
             "radio":{},
         }
-        for m in result:
-            result[m]["data"] = [0,0,0,0,0,0,0,0,0,0]
-
-        stats = StatMethod.all()
-        for stat in stats:
-            result[stat.method]["data"][stat.number-1] = stat.count
-            result[stat.method]["generated"] = "%sZ" % stat.generated.isoformat()
-
+        cached_data = memcache.get("results-data")
+        if cached_data is not None:
+            result = cached_data
+        else:
+            for m in result:
+                result[m]["random_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+                result[m]["random_not_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+        
+            stats = Stat.all().filter("showed_random !=", None)
+            for stat in stats:
+                if stat.showed_random:
+                    random_text = "random_specified"
+                else:
+                    random_text = "random_not_specified"
+                result[stat.method][random_text]["data"][stat.number-1] = stat.count
+                result[stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
+            memcache.add("results-data", result, 3600)
         self.response.headers["Content-Type"] = "application/javascript"
         self.response.out.write(simplejson.dumps(result))
+
+class RedirectResultHandler(webapp.RequestHandler):
+    def get(self):
+        self.redirect('/results/')
 
 def main():
     application = webapp.WSGIApplication([
                                 ('/', MainHandler),
-                                ('/results', ResultHandler),
+                                ('/results', RedirectResultHandler),
                                 ('/results/', ResultHandler),
                                 ('/data/', DataHandler),
                                         ],debug=False)

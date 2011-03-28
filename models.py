@@ -37,3 +37,16 @@ def doVote(number, method, pick, submit, showed_random, ip=None):
                 vote.put()
                 return vote
         return None
+
+
+class StatMethod(db.Model):
+    method = db.StringProperty()
+    number = db.IntegerProperty()
+    count = db.IntegerProperty()
+    generated = db.DateTimeProperty()
+
+class StatRandom(db.Model):
+    random = db.BooleanProperty()
+    number = db.IntegerProperty()
+    count = db.IntegerProperty()
+    generated = db.DateTimeProperty()

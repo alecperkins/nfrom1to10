@@ -4,19 +4,23 @@ from google.appengine.ext.webapp import util
 
 from django.utils import simplejson
 
-from models import Vote, doVote, Stat
+from models import Vote, doVote, Stat, HourNumberCount
+import os
+from datetime import datetime
+import time
+V = os.environ['CURRENT_VERSION_ID']
 
-
-def getCachedPage(key):
+def getCachedPage(page):
+    key = "%s-%s" % (V, page)
     cached_data = memcache.get(key)
     if cached_data is not None:
-        page = cached_data
+        p = cached_data
     else:
-        f = open(key)
-        page = f.read()
-        memcache.set(key,page,1800)
+        f = open(page)
+        p = f.read()
+        memcache.set(key,p,1800)
         f.close()
-    return page
+    return p
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
@@ -52,28 +56,50 @@ class DataHandler(webapp.RequestHandler):
         #     method: [count, count, count...]
         # }
         result = {
-            "input":{},
-            "select":{},
-            "slider":{},
-            "radio":{},
+            "breakdown": {
+                "input":{},
+                "select":{},
+                "slider":{},
+                "radio":{},
+            },
+            "overtime": []
         }
-        cached_data = memcache.get("results-data")
-        if cached_data is not None:
-            result = cached_data
+
+
+        cached_breakdown = memcache.get("%s-results-breakdown" % V)
+        if cached_breakdown is not None:
+            result["breakdown"] = cached_breakdown
         else:
-            for m in result:
-                result[m]["random_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
-                result[m]["random_not_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
-        
+            for m in result["breakdown"]:
+                result["breakdown"][m]["random_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+                result["breakdown"][m]["random_not_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+
             stats = Stat.all().filter("showed_random !=", None)
             for stat in stats:
                 if stat.showed_random:
                     random_text = "random_specified"
                 else:
                     random_text = "random_not_specified"
-                result[stat.method][random_text]["data"][stat.number-1] = stat.count
-                result[stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
-            memcache.add("results-data", result, 1800)
+                result["breakdown"][stat.method][random_text]["data"][stat.number-1] = stat.count
+                result["breakdown"][stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
+            
+            memcache.add("%s-results-breakdown" % V, result["breakdown"], 600)
+
+
+        cached_overtime = memcache.get("%s-results-overtime" % V)
+        if cached_overtime is not None:
+            result["overtime"] = cached_overtime
+        else:
+            result["overtime"] = [ [] for n in range(0,10) ]
+            
+            hend = datetime(2011,3,28,17,11,56)
+            hourcount = HourNumberCount.all().filter("hour_end <", hend)
+            for stat in hourcount:
+                t = time.mktime(stat.hour_start.timetuple())
+                c = stat.count
+                result["overtime"][stat.number-1].append( (t,c) )
+            memcache.add("%s-results-overtime" % V, result["overtime"], 600)
+            
         self.response.headers["Content-Type"] = "application/javascript"
         self.response.out.write(simplejson.dumps(result))
 

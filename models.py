@@ -52,10 +52,9 @@ class Stat(db.Model):
     generated = db.DateTimeProperty()
     showed_random = db.BooleanProperty()
 
-class InvalidNumCount(db.Model):
-    method = db.StringProperty()
-    number = db.IntegerProperty()
-    ips = db.StringListProperty()
-    count = db.IntegerProperty()
+class HourNumberCount(db.Model):
     generated = db.DateTimeProperty()
-    showed_random = db.BooleanProperty()
+    number = db.IntegerProperty()
+    count = db.IntegerProperty()
+    hour_start = db.DateTimeProperty()
+    hour_end = db.DateTimeProperty()

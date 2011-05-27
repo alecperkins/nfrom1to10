@@ -1,5 +1,5 @@
 application: nfrom1to10
-version: 7c
+version: lt-a
 runtime: python
 api_version: 1
 
@@ -11,5 +11,12 @@ handlers:
   script: tasks.py
   login: admin
 
+- url: /tasks
+  script: handle_admin.py
+  login: admin
+
+- url: /data
+  script: handle_data.py
+
 - url: .*
-  script: main.py
+  script: handle_pages.py

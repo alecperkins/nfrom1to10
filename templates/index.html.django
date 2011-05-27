@@ -1,0 +1,32 @@
+{% extends "_base.html.django" %}
+
+{% block extra_head %}
+    <script type="text/javascript">{% include "pickers.js" %}</script>
+    <script type="text/javascript">{% include "quiz.js" %}</script>
+{% endblock %}
+
+{% block body %}
+    <h1 style="color: transparent;"><span>Pick a number from 1 to 10</span><div><sup>*<sup>
+        <p id="instructions">
+            For all you pedants out there, that's choose from the set {1,2,3,4,5,6,7,8,9,10}
+        </p></div>
+    </h1>
+    
+    <div id="methods">
+
+    </div>
+    <button disabled=true>Choose</button>
+    <a id="results-link" href="/results/">some results &raquo;</a>
+    
+    <div id="follow-up">
+        Questions...
+    </div>
+    
+    <div id="done">
+        Science thanks you.
+        <p>
+            Some results are <a href="/results/">available</a>. Thanks for voting!
+        </p>
+    </div>
+
+{% endblock %}

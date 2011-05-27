@@ -9,6 +9,10 @@ class Vote(db.Model):
     showed_random = db.BooleanProperty()    # True if "random" was said, False if not
     ip = db.StringProperty()                # ip address of voter
 
+class Followup(db.Model):
+    vote = db.ReferenceProperty(Vote)
+
+
 OPTIONS = ("input","radio","select","slider")
 def doVote(number, method, pick, submit, showed_random, ip=None):
     if number and method and pick and submit and showed_random:

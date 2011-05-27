@@ -1,3 +1,5 @@
+import os
+
 from google.appengine.api import memcache
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -5,7 +7,7 @@ from google.appengine.ext.webapp import util
 from django.utils import simplejson
 
 from models import Vote, doVote, Stat, HourNumberCount
-import os
+
 from datetime import datetime
 import time
 V = os.environ['CURRENT_VERSION_ID']
@@ -109,11 +111,11 @@ class RedirectResultHandler(webapp.RequestHandler):
 
 def main():
     application = webapp.WSGIApplication([
-                                ('/', MainHandler),
-                                ('/results', RedirectResultHandler),
-                                ('/results/', ResultHandler),
-                                ('/data/', DataHandler),
-                                        ],debug=False)
+                                ('/',           MainHandler),
+                                ('/results',    RedirectResultHandler),
+                                ('/results/',   ResultHandler),
+                                ('/data/',      DataHandler),
+                                ],debug=False)
     util.run_wsgi_app(application)
 
 if __name__ == '__main__':

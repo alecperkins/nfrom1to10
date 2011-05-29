@@ -1,36 +1,48 @@
-import os
-
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
-from django.utils import simplejson
+from models import doVote, doFollowup
 
-from models import Vote, doVote, Stat, HourNumberCount
-
-from datetime import datetime
-import time
-
-from handler_utils import renderToResponse
+from handler_utils import renderToResponse, jsonResponse
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
         renderToResponse(self, 'index.html.django')
 
+class VoteHandler(webapp.RequestHandler):
     def post(self):
-        number          = self.request.get("number", None)
-        method          = self.request.get("method", None)
-        pick            = self.request.get("pick", None)
-        submit          = self.request.get("submit", None)
-        showed_random   = self.request.get("random", None)
+        number          = self.request.get('number', None)
+        method          = self.request.get('method', None)
+        pick            = self.request.get('pick', None)
+        submit          = self.request.get('submit', None)
+        showed_random   = self.request.get('random', None)
         
         ip = self.request.remote_addr
         
-        result = { "status": "failed" }
-        if doVote(number, method, pick, submit, showed_random, ip):
-            result = { "status": "success" }
+        result = { 'status': 'failed' }
+        vote = doVote(number, method, pick, submit, showed_random, ip)
+        if vote:
+            result = {
+                'status'    : 'success',
+                'vote_id'   : str(vote.key())
+            }
 
-        self.response.headers["Content-Type"] = "application/javascript"
-        self.response.out.write(simplejson.dumps(result))
+        jsonResponse(self, result)
+
+class FollowupHandler(webapp.RequestHandler):
+    def post(self):
+        vote_id         = self.request.get('vote_id', None)
+        how             = self.request.get('how', None)
+        why             = self.request.get('why', None)
+        
+        result = { 'status': 'failed' }
+        followup = doFollowup(vote_id, how, why)
+        if followup:
+            result = {
+                'status'    : 'success',
+            }
+
+        jsonResponse(self, result)
 
 class ResultHandler(webapp.RequestHandler):
     def get(self):
@@ -43,6 +55,8 @@ class RedirectResultHandler(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([
                                 ('/',           MainHandler),
+                                ('/vote/',      VoteHandler),
+                                ('/followup/',  FollowupHandler),
                                 ('/results',    RedirectResultHandler),
                                 ('/results/',   ResultHandler),
                                 ],debug=False)

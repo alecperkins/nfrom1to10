@@ -17,3 +17,12 @@ except:
     pass
 
 DEBUG = (ENVIRONMENT == "local")
+
+
+# Import secrets, like:
+# DATA_KEY = ""
+
+try:
+    from secrets import *
+except ImportError:
+    pass

@@ -1,31 +1,46 @@
 {% extends "_base.html.django" %}
 
 {% block extra_head %}
-    <script type="text/javascript">{% include "pickers.js" %}</script>
-    <script type="text/javascript">{% include "quiz.js" %}</script>
+    {% if DEBUG %}
+        <script type="text/javascript">{% include "pickers.js" %}</script>
+        <script type="text/javascript">{% include "quiz.js" %}</script>
+    {% else %}
+        <script type="text/javascript">{% include "index-min.js" %}</script>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1 style="color: transparent;"><span>Pick a number from 1 to 10</span><div><sup>*<sup>
-        <p id="instructions">
+    <style>
+        .selected { font-weight: bold; }
+    </style>
+    <h1 class="method"><span>Pick a number from 1 to 10</span><div><sup>*<sup>
+        <p id="instructions" style="display:none;">
             For all you pedants out there, that's choose from the set {1,2,3,4,5,6,7,8,9,10}
         </p></div>
     </h1>
     
-    <div id="methods">
+    <div id="methods" style="display:none;" class="method"></div>
 
-    </div>
-    <button disabled=true>Choose</button>
+    <button id="submit-number" disabled=true class="method">Choose</button>
+
     <a id="results-link" href="/results/">some results &raquo;</a>
-    
-    <div id="follow-up">
-        Questions...
+
+    <div id="follow-up" style="display:none;">
+        <h2>Thanks for voting!</h2>
+        <p>If you don't mind, please answer the following questions:</p>
+        
+        <p>How did you pick '<span class="num"></span>'?</p>
+        <ul id="how"></ul>
+        
+        <p>Does '<span class="num"></span>' have significance to you?</p>
+        <ul id="why"></ul>
+        <button id="submit-followup" disabled=true>Submit</button>
     </div>
     
-    <div id="done">
+    <div id="done" style="display:none;">
         Science thanks you.
         <p>
-            Some results are <a href="/results/">available</a>. Thanks for voting!
+            See what this is <a href="/results/">all about</a>. Thanks for participating!
         </p>
     </div>
 

@@ -51,6 +51,7 @@ class Quiz
             random  : true
             pick    : @t_pick
             submit  : @t_submit
+            range   : @active_picker.range
         console.log data
         $.post '/vote/', data, (response) =>
             console.log response
@@ -82,12 +83,14 @@ class Quiz
                 $('#how').append(x)
             )()
         
-        x = renderItem('how', 5, '<input type="text" style="opacity:0.3">')
+        x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3">')
         x.click =>
-            @followup_how = $('input[type="text"]').val()
+            $('#follow-up-how-other').keydown =>
+                @followup_how = $('#follow-up-how-other').val()
             $('input[type="text"]').css('opacity','1')
             $('#how .selected').removeClass('selected')
             x.addClass('selected')
+            console.log @followup_how
             @enableSubmitFollowup()
         $('#how').append(x)
         

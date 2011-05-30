@@ -8,6 +8,7 @@ class Picker
     template: ''
 
     constructor: (@el) ->
+        @range = '1-10'
 
     render: ->
         @el.html """

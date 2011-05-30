@@ -1,4 +1,15 @@
 {% extends "_base.html.django" %}
 
+{% block title %}Results for {% endblock %}
+
+{% block extra_head %}
+    <script type="text/javascript">{% include "pickers.js" %}</script>
+    <script type="text/javascript">{% include "results.js" %}</script>
+    {# <script type="text/javascript">{% include "jquery.flot-min.js" %}</script> #}
+{% endblock %}
+
 {% block body %}
+    results
+    Development is still ongoing.
+
 {% endblock %}

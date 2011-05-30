@@ -8,6 +8,7 @@ class Vote(db.Model):
     submit          = db.IntegerProperty()          # num ms to submit of choice
     showed_random   = db.BooleanProperty()          # True if "random" was said, False if not
     ip              = db.StringProperty()           # ip address of voter
+    range           = db.StringProperty()           # number range presented: eg 1-10, 0-9
 
 class Followup(db.Model):
     vote    = db.ReferenceProperty(Vote)
@@ -61,7 +62,7 @@ def doVote(number, method, pick, submit, showed_random, ip=None):
 
 
 def doFollowup(vote_id, how, why):
-    if vote_id and how and why:
+    if vote_id and how is not None and why is not None:
         try:
             vote = db.get(db.Key(vote_id))
         except:
@@ -76,22 +77,21 @@ def doFollowup(vote_id, how, why):
     return None        
 
 
-class StatMethod(db.Model):
-    method = db.StringProperty()
-    number = db.IntegerProperty()
-    count = db.IntegerProperty()
-    generated = db.DateTimeProperty()
+class VoteStat(db.Model):
+    method          = db.StringProperty()
+    number          = db.IntegerProperty()
+    count           = db.IntegerProperty()
+    generated       = db.DateTimeProperty()
+    showed_random   = db.BooleanProperty()
 
-class Stat(db.Model):
-    method = db.StringProperty()
-    number = db.IntegerProperty()
-    count = db.IntegerProperty()
-    generated = db.DateTimeProperty()
-    showed_random = db.BooleanProperty()
+class HowStat(db.Model):
+    how             = db.StringProperty()
+    number          = db.IntegerProperty()
+    count           = db.IntegerProperty()
+    generated       = db.DateTimeProperty()
 
-class HourNumberCount(db.Model):
-    generated = db.DateTimeProperty()
-    number = db.IntegerProperty()
-    count = db.IntegerProperty()
-    hour_start = db.DateTimeProperty()
-    hour_end = db.DateTimeProperty()
+class WhyStat(db.Model):
+    why             = db.StringProperty()
+    number          = db.IntegerProperty()
+    count           = db.IntegerProperty()
+    generated       = db.DateTimeProperty()

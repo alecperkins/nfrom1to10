@@ -17,7 +17,7 @@ def renderToResponse(handler_instance, template_name, context={}):
         cached_data = memcache.get(key)
         if cached_data is not None:
             rendered_page = cached_data
-    
+
     if rendered_page is None:
         path = os.path.join(settings.TEMPLATE_DIR, template_name)
         base_context.update(context)
@@ -25,7 +25,7 @@ def renderToResponse(handler_instance, template_name, context={}):
 
     if settings.CACHE:
         memcache.set(key, rendered_page, settings.CACHE_LIFE)
-    
+
     handler_instance.response.out.write(rendered_page)
 
 def jsonResponse(handler_instance, data):

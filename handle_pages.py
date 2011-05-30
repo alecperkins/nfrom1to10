@@ -2,8 +2,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 from models import doVote, doFollowup
-
 from handler_utils import renderToResponse, jsonResponse
+import settings
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
@@ -59,7 +59,7 @@ def main():
                                 ('/followup/',  FollowupHandler),
                                 ('/results',    RedirectResultHandler),
                                 ('/results/',   ResultHandler),
-                                ],debug=False)
+                                ],debug=settings.DEBUG)
     util.run_wsgi_app(application)
 
 if __name__ == '__main__':

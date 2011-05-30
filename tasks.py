@@ -1,7 +1,7 @@
 from google.appengine.ext import db
-from google.appengine.api.labs import taskqueue
+from google.appengine.api import taskqueue
 
-from models import Vote, Stat
+from models import Vote, VoteStat
 OPTIONS = ("input","radio","select","slider")
 
 from google.appengine.ext import webapp
@@ -9,22 +9,22 @@ from google.appengine.ext.webapp import util
 
 from datetime import datetime
 
-class TaskHandler(webapp.RequestHandler):
-    def get(self):
-        self.response.out.write("%s<br><br>" % datetime.now())
+class StartTallysHandler(webapp.RequestHandler):
+    def post(self):
+        # /tasks/tally-votes
         for method in OPTIONS:
             for number in range(1,11):
                 for random_text in ["random",""]:
-                    number = int(number)
                     params = {
                         "number": number,
                         "method": method,
                         "refresh": True,
                         "random_text": random_text,
                     }
-                    taskqueue.add(url="/tasks", params=params)
-                    self.response.out.write("%s-%s-%s<br>" % (number, method, random_text))
+                    taskqueue.add(url="/tasks/tally-votes", params=params)
 
+
+class TallyVoteHandler(webapp.RequestHandler):
     def post(self):
         method = self.request.get("method", None)
         number = self.request.get("number", None)
@@ -44,19 +44,19 @@ class TaskHandler(webapp.RequestHandler):
         
         
         if method and number and method in OPTIONS:
-            # key_name = "%s-%s" % (method, number)
             key_name = "%s-%s-%s" % (method, number, showed_random)
-            stat = Stat.get_or_insert(key_name)
+            stat = VoteStat.get_or_insert(key_name)
             
             q = Vote.all()
             q.filter("method =", method)
             q.filter("number =", number)
             q.filter("showed_random =", showed_random)
-
             if cursor:
                 q.with_cursor(cursor)
+
             count = q.count()
             next_cursor = q.cursor() if count == 1000 else None
+
             if refresh or not stat.count:
                 stat.count = 0
             stat.count = stat.count + count
@@ -73,13 +73,12 @@ class TaskHandler(webapp.RequestHandler):
                     "cursor": next_cursor,
                     "random_text": random_text,
                 }
-                taskqueue.add(url="/tasks", params=params)
-
+                taskqueue.add(url="/tasks/tally-votes", params=params)
 
 def main():
     application = webapp.WSGIApplication([
-                                ('/tasks', TaskHandler),
-                                        ],debug=True)
+                                ('/tasks/tally-votes',  TallyVoteHandler),
+                                ])
     util.run_wsgi_app(application)
 
 if __name__ == '__main__':

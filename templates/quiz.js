@@ -56,7 +56,8 @@
         method: this.active_picker.type,
         random: true,
         pick: this.t_pick,
-        submit: this.t_submit
+        submit: this.t_submit,
+        range: this.active_picker.range
       };
       console.log(data);
       return $.post('/vote/', data, __bind(function(response) {
@@ -98,12 +99,15 @@
         }
         _fn();
       }
-      x = renderItem('how', 5, '<input type="text" style="opacity:0.3">');
+      x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3">');
       x.click(__bind(function() {
-        this.followup_how = $('input[type="text"]').val();
+        $('#follow-up-how-other').keydown(__bind(function() {
+          return this.followup_how = $('#follow-up-how-other').val();
+        }, this));
         $('input[type="text"]').css('opacity', '1');
         $('#how .selected').removeClass('selected');
         x.addClass('selected');
+        console.log(this.followup_how);
         return this.enableSubmitFollowup();
       }, this));
       $('#how').append(x);

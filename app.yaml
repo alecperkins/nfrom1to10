@@ -11,10 +11,6 @@ handlers:
   script: tasks.py
   login: admin
 
-- url: /tasks
-  script: handle_admin.py
-  login: admin
-
 - url: /data
   script: handle_data.py
 

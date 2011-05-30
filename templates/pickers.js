@@ -15,6 +15,7 @@
     Picker.prototype.template = '';
     function Picker(el) {
       this.el = el;
+      this.range = '1-10';
     }
     Picker.prototype.render = function() {
       return this.el.html("<div class=\"method\" id=\"method-" + this.type + "\">\n    " + this.template + "\n</div>");

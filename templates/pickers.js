@@ -10,8 +10,11 @@
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Picker = (function() {
     /*
-    Base class for all Pickers.
-    */    Picker.prototype.type = '';
+        Base class for all Pickers. Bind to the Picker instance's `picked` event
+        to detect when a number has been picked. The `number` attribute has the
+        currently chosen number for that Picker instance. By default, the number
+        is undefined.
+        */    Picker.prototype.type = '';
     Picker.prototype.template = '';
     function Picker(el) {
       this.el = el;
@@ -27,14 +30,14 @@
     return Picker;
   })();
   Input = (function() {
+    __extends(Input, Picker);
     function Input() {
       Input.__super__.constructor.apply(this, arguments);
     }
-    __extends(Input, Picker);
     /*
-    Text box that only allows numbers from 1 to 10 to be entered
-    (and 0, due to bug).
-    */
+        Text box that only allows numbers from 1 to 10 to be entered
+        (and 0, due to bug).
+        */
     Input.prototype.type = 'input';
     Input.prototype.template = '<input type="text">';
     Input.prototype.render = function() {
@@ -57,12 +60,14 @@
   })();
   Radio = (function() {
     var i;
+    __extends(Radio, Picker);
     function Radio() {
       Radio.__super__.constructor.apply(this, arguments);
     }
-    __extends(Radio, Picker);
     /*
-    */
+        All the possible numbers, arranged in a list. Numbers are selected like a
+        standard radio list, where only one item can be selected at a time.
+        */
     Radio.prototype.type = 'radio';
     Radio.prototype.template = ((function() {
       var _results;
@@ -74,21 +79,27 @@
     })()).join('');
     Radio.prototype.render = function() {
       Radio.__super__.render.call(this);
-      console.log(this.el.find('span'));
       return this.el.find('span').click(__bind(function(e) {
-        return this.setNumber(parseInt($(e.currentTarget).text()));
+        var $el;
+        $el = $(e.currentTarget);
+        this.el.find('span.selected').removeClass('selected');
+        $el.addClass('selected');
+        return this.setNumber(parseInt($el.text()));
       }, this));
     };
     return Radio;
   })();
   Select = (function() {
     var i;
+    __extends(Select, Picker);
     function Select() {
       Select.__super__.constructor.apply(this, arguments);
     }
-    __extends(Select, Picker);
     /*
-    */
+        All the possible numbers, arranged in a list that is only visible after
+        the user hovers over the item. Like a standard <select>, only one item can
+        be selected at a time.
+        */
     Select.prototype.type = 'select';
     Select.prototype.template = "<span id=\"selected-num\">-</span>\n<ul style=\"display:none;\">\n    " + (((function() {
       var _results;
@@ -117,12 +128,14 @@
     return Select;
   })();
   Slider = (function() {
+    __extends(Slider, Picker);
     function Slider() {
       Slider.__super__.constructor.apply(this, arguments);
     }
-    __extends(Slider, Picker);
     /*
-    */
+        A slider with start, end, and increments for the range of possible numbers.
+        Unlike other Pickers, the Slider has a default value of 1.
+        */
     Slider.prototype.type = 'slider';
     Slider.prototype.template = '<div id="choice-slider"></div>';
     Slider.prototype.render = function() {
@@ -152,4 +165,5 @@
     Select: Select,
     Slider: Slider
   };
+  window.picker_options = ['Input', 'Radio', 'Select', 'Slider'];
 }).call(this);

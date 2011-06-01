@@ -1,6 +1,9 @@
 class Picker
     ###
-    Base class for all Pickers.
+    Base class for all Pickers. Bind to the Picker instance's `picked` event
+    to detect when a number has been picked. The `number` attribute has the
+    currently chosen number for that Picker instance. By default, the number
+    is undefined.
     ###
 
     type: ''
@@ -48,6 +51,8 @@ class Input extends Picker
 
 class Radio extends Picker
     ###
+    All the possible numbers, arranged in a list. Numbers are selected like a
+    standard radio list, where only one item can be selected at a time.
     ###
 
     type: 'radio'
@@ -56,14 +61,19 @@ class Radio extends Picker
 
     render: ->
         super()
-        console.log @el.find('span')
         @el.find('span').click (e) =>
-            @setNumber(parseInt $(e.currentTarget).text())
+            $el = $(e.currentTarget)
+            @el.find('span.selected').removeClass('selected')
+            $el.addClass('selected')
+            @setNumber(parseInt $el.text())
 
 
 
 class Select extends Picker
     ###
+    All the possible numbers, arranged in a list that is only visible after
+    the user hovers over the item. Like a standard <select>, only one item can
+    be selected at a time.
     ###
 
     type: 'select'
@@ -92,6 +102,8 @@ class Select extends Picker
 
 class Slider extends Picker
     ###
+    A slider with start, end, and increments for the range of possible numbers.
+    Unlike other Pickers, the Slider has a default value of 1.
     ###
 
     type: 'slider'
@@ -125,3 +137,10 @@ window.pickers =
     Radio   : Radio
     Select  : Select
     Slider  : Slider
+
+window.picker_options = [
+    'Input'
+    'Radio'
+    'Select'
+    'Slider'
+]

@@ -1,0 +1,115 @@
+
+.method
+    text-align  : center
+    margin      : 0 auto
+    font-size   : 1em
+    display     : none
+    padding     : 0
+
+
+#method-input input
+    +border-radius(1em)
+    font-size   : 3em
+    margin      : 0 auto
+    display     : block
+    width       : 1.5em
+    height      : 1em
+    text-align  : center
+    padding     : 0.5em 0.25em
+    border      : 2px solid
+    outline     : none
+
+
+#method-slider
+    #choice-slider
+        +border-radius(1em)
+        font-size   : 2em
+        display     : inline-block
+        width       : 10em
+        background  : white
+        border      : 1px solid black
+    p
+        display         : inline-block
+        vertical-align  : top
+    .ui-slider-handle
+        +border-radius(1em)
+        background      : black
+        cursor          : pointer
+        text-align      : center
+        text-decoration : none
+        color           : white
+        outline         : none
+        font-size       : 1em
+        padding         : 0.25em
+        margin-top      : -0.25em
+    a.ui-slider-handle:hover
+        background  : #D93312
+
+
+#method-radio span
+    +border-radius(1em)
+    display     : inline-block
+    width       : 1em
+    height      : 1em
+    font-size   : 2em
+    margin      : 0
+    cursor      : pointer
+    padding     : 0.5em
+    text-align  : center
+    &:hover
+        background  : #D93312
+        color       : white
+    &.selected
+        color       : white
+        background  : black
+
+
+#method-select
+    height      : 4em
+    position    : relative
+    #selected-num
+        +border-radius(2em)
+        cursor      : pointer
+        font-size   : 2em
+        width       : 2em
+        height      : 1.5em
+        padding-top : 0.5em
+        display     : block
+        margin      : 0 auto
+        background  : black
+        color       : white
+
+
+    ul
+        +border-radius(2em)
+        position        : absolute
+        top             : 0
+        left            : 0
+        list-style-type : none
+        padding         : 0
+        display         : none
+        margin          : 0 auto
+        background      : white
+        border          : 1px solid black
+        width           : 40em
+
+    li
+        +border-radius(1em)
+        font-size   : 2em
+        width       : 2em
+        height      : 1em
+        padding     : 0.5em 0
+        text-align  : center
+        cursor      : pointer
+        display     : inline-block
+
+        &.selected
+            background  : black
+            color       : white
+        &:hover
+            background  : #D93312
+            color       : white
+
+    #select-n
+        background  : white
+        color       : black

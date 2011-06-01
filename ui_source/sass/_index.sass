@@ -1,0 +1,107 @@
+h1
+    p#instructions
+        position    : absolute
+        text-align  : left
+        font-size   : 0.4em
+        width       : 11em
+        margin      : 0 auto
+        top         : 5em
+        color       : #999
+        display     : none
+        margin-left : 1.3em
+
+    & > div
+        display : inline-block
+        cursor  : pointer
+
+    & > div:hover
+        color   : #D93312
+        p#instructions
+            display : block
+
+button, button.method
+    +border-radius(1em)
+    font-size   : 3em
+    font-family : inherit
+    display     : block
+    margin      : 0 auto
+    height      : 2em
+    width       : 5em
+    cursor      : pointer
+    background  : black
+    color       : white
+    border      : 0
+    &:hover
+        background  : #D93312
+    &:active
+        background  : black
+        color       : white
+    &:disabled
+        opacity     : 0.1
+    &:disabled:hover
+        background  : black
+        cursor      : default
+
+img
+    position    : absolute
+    top         : 0
+    left        : 0
+    display     : none
+
+#methods
+    height      : 8em
+
+#done
+    display     : none
+    text-align  : center
+    font-size   : 3em
+    font-weight : bold
+    padding-top : 2em
+    p
+        font-size   : 15px
+
+#results-link
+    +rotate(-45deg)
+    position        : absolute
+    display         : block
+    top             : 0.8em
+    left            : 2em
+    font-variant    : small-caps
+    margin          : 5em auto
+    color           : #ccc
+    display         : block
+    width           : 10em
+    text-align      : center
+
+#results-link:hover
+    color           : #D93312
+    text-decoration : none
+
+
+#follow-up
+    h2, .instructions
+        text-align      : center
+    ul, .instructions
+        margin-bottom   : 2em
+    p
+        font-weight     : bold
+        font-size       : 1em
+    li
+        cursor          : pointer
+        list-style-type : circle
+        border: 1px solid transparent
+        padding: 0.5em
+        &.selected
+            font-weight     : bold
+            list-style-type : disc
+        input
+            +border-radius(1em)
+            margin-left : 1em
+            font-size   : 1em
+            font-style  : italic
+            width       : 80%
+            margin-top  : -0.25em
+            padding     : 0.25em 1em
+            outline     : none
+            border      : 1px solid #ccc
+    

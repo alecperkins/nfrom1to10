@@ -95,3 +95,10 @@ class WhyStat(db.Model):
     number          = db.IntegerProperty()
     count           = db.IntegerProperty()
     generated       = db.DateTimeProperty()
+
+class HourNumberCount(db.Model):
+    generated       = db.DateTimeProperty()
+    number          = db.IntegerProperty()
+    count           = db.IntegerProperty()
+    hour_start      = db.DateTimeProperty()
+    hour_end        = db.DateTimeProperty()

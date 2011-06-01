@@ -1,10 +1,3 @@
-picker_options = [
-    'Input'
-    'Radio'
-    'Select'
-    'Slider'
-]
-
 follow_ups =
     how:
         '1'         : 'Thought of a number and chose it'
@@ -21,11 +14,18 @@ follow_ups =
         '3'         : 'No, it is arbitrary'
 
 class Quiz
+    ###
+    Class for managing the quiz flow. The whole thing is procedural, really.
+    This is just used to namespace everything.
+    ###
+
     t_start = null
+
     constructor: ->
         @number = null
-        choice = picker_options[Math.floor(Math.random()*4)]
+        choice = window.picker_options[Math.floor(Math.random()*4)]
         @active_picker = new window.pickers[choice]($('#methods'))
+        @active_picker.render()
         @els =
             submit_number       : $('#submit-number')
             submit_followup     : $('#submit-followup')
@@ -36,9 +36,13 @@ class Quiz
         $(@active_picker).bind 'picked', =>
             @t_pick ?= (new Date() - t_start)
             @els.submit_number.attr('disabled',false)
+
+        if @active_picker.type is 'slider'
+            $(@active_picker).trigger('picked')
+
         @els.submit_number.click @submit
         @els.submit_followup.click @submitFollowup
-        @active_picker.render()
+        @els.methods.show()
         @els.method_container.show()
         t_start = new Date()
 
@@ -83,7 +87,7 @@ class Quiz
                 $('#how').append(x)
             )()
         
-        x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3">')
+        x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3" placeholder="Please describe the method you used.">')
         x.click =>
             $('#follow-up-how-other').keydown =>
                 @followup_how = $('#follow-up-how-other').val()

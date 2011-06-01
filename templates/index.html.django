@@ -10,16 +10,13 @@
 {% endblock %}
 
 {% block body %}
-    <style>
-        .selected { font-weight: bold; }
-    </style>
     <h1 class="method"><span>Pick a number from 1 to 10</span><div><sup>*<sup>
-        <p id="instructions" style="display:none;">
+        <p id="instructions">
             For all you pedants out there, that's choose from the set {1,2,3,4,5,6,7,8,9,10}
         </p></div>
     </h1>
     
-    <div id="methods" style="display:none;" class="method"></div>
+    <div id="methods" class="method"></div>
 
     <button id="submit-number" disabled=true class="method">Choose</button>
 
@@ -27,7 +24,7 @@
 
     <div id="follow-up" style="display:none;">
         <h2>Thanks for voting!</h2>
-        <p>If you don't mind, please answer the following questions:</p>
+        <p class="instructions">If you don't mind, please answer the following questions:</p>
         
         <p>How did you pick '<span class="num"></span>'?</p>
         <ul id="how"></ul>

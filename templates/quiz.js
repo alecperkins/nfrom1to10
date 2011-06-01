@@ -1,7 +1,6 @@
 (function() {
-  var Quiz, follow_ups, picker_options;
+  var Quiz, follow_ups;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  picker_options = ['Input', 'Radio', 'Select', 'Slider'];
   follow_ups = {
     how: {
       '1': 'Thought of a number and chose it',
@@ -20,14 +19,18 @@
     }
   };
   Quiz = (function() {
-    var t_start;
+    /*
+        Class for managing the quiz flow. The whole thing is procedural, really.
+        This is just used to namespace everything.
+        */    var t_start;
     t_start = null;
     function Quiz() {
-      this.submitFollowup = __bind(this.submitFollowup, this);;
-      this.submit = __bind(this.submit, this);;      var choice;
+      this.submitFollowup = __bind(this.submitFollowup, this);
+      this.submit = __bind(this.submit, this);      var choice;
       this.number = null;
-      choice = picker_options[Math.floor(Math.random() * 4)];
+      choice = window.picker_options[Math.floor(Math.random() * 4)];
       this.active_picker = new window.pickers[choice]($('#methods'));
+      this.active_picker.render();
       this.els = {
         submit_number: $('#submit-number'),
         submit_followup: $('#submit-followup'),
@@ -38,19 +41,30 @@
       };
       $(this.active_picker).bind('picked', __bind(function() {
         var _ref;
-        (_ref = this.t_pick) != null ? _ref : this.t_pick = new Date() - t_start;
+                if ((_ref = this.t_pick) != null) {
+          _ref;
+        } else {
+          this.t_pick = new Date() - t_start;
+        };
         return this.els.submit_number.attr('disabled', false);
       }, this));
+      if (this.active_picker.type === 'slider') {
+        $(this.active_picker).trigger('picked');
+      }
       this.els.submit_number.click(this.submit);
       this.els.submit_followup.click(this.submitFollowup);
-      this.active_picker.render();
+      this.els.methods.show();
       this.els.method_container.show();
       t_start = new Date();
     }
     Quiz.prototype.submit = function() {
       var data, _ref;
       console.log(this.active_picker.number);
-      (_ref = this.t_submit) != null ? _ref : this.t_submit = new Date() - t_start;
+            if ((_ref = this.t_submit) != null) {
+        _ref;
+      } else {
+        this.t_submit = new Date() - t_start;
+      };
       data = {
         number: this.active_picker.number,
         method: this.active_picker.type,
@@ -99,7 +113,7 @@
         }
         _fn();
       }
-      x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3">');
+      x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3" placeholder="Please describe the method you used.">');
       x.click(__bind(function() {
         $('#follow-up-how-other').keydown(__bind(function() {
           return this.followup_how = $('#follow-up-how-other').val();

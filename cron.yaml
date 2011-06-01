@@ -1,4 +1,4 @@
 cron:
 - description: initiate retally
-  url: /tasks/tally-votes
+  url: /tasks/start
   schedule: every 24 hours

@@ -22,6 +22,7 @@ class StartTallysHandler(webapp.RequestHandler):
                         "random_text": random_text,
                     }
                     taskqueue.add(url="/tasks/tally-votes", params=params)
+        self.response.out.write('200')
 
 
 class TallyVoteHandler(webapp.RequestHandler):
@@ -78,6 +79,7 @@ class TallyVoteHandler(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([
                                 ('/tasks/tally-votes',  TallyVoteHandler),
+                                ('/tasks/start',        StartTallysHandler),
                                 ])
     util.run_wsgi_app(application)
 

@@ -1,7 +1,7 @@
 # /data/overview - summary
 # /data/votes?key=KEY
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 
 from google.appengine.api import memcache
@@ -21,10 +21,10 @@ class ResultsHandler(webapp.RequestHandler):
         # }
         result = {
             "breakdown": {
-                "input":{},
-                "select":{},
-                "slider":{},
-                "radio":{},
+                "input"     :{},
+                "select"    :{},
+                "slider"    :{},
+                "radio"     :{},
             },
             "overtime": []
         }
@@ -33,6 +33,7 @@ class ResultsHandler(webapp.RequestHandler):
             cached_breakdown = memcache.get("%s-results-breakdown" % settings.VERSION)
         else:
             cached_breakdown = None
+
         if cached_breakdown is not None:
             result["breakdown"] = cached_breakdown
         else:
@@ -50,7 +51,7 @@ class ResultsHandler(webapp.RequestHandler):
                 result["breakdown"][stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
             
             if settings.CACHE:
-                memcache.add("%s-results-breakdown" % V, result["breakdown"], 600)
+                memcache.add("%s-results-breakdown" % settings.VERSION, result["breakdown"], settings.CACHE_LIFE)
 
         if settings.CACHE:
             cached_overtime = memcache.get("%s-results-overtime" % settings.VERSION)
@@ -68,15 +69,31 @@ class ResultsHandler(webapp.RequestHandler):
                 c = stat.count
                 result["overtime"][stat.number-1].append( (t,c) )
             if settings.CACHE:
-                memcache.add("%s-results-overtime" % settings.VERSION, result["overtime"], 600)
+                memcache.add("%s-results-overtime" % settings.VERSION, result["overtime"], settings.CACHE_LIFE)
             
         jsonResponse(self, result)
 
 class VotesHandler(webapp.RequestHandler):
     def get(self):
-        method = self.request.get("method", None)
-        number = self.request.get("number", None)
-        random_text = self.request.get("random_text", None)
+        if settings.THROTTLE_API:
+            ip = str(self.request.remote_addr)
+            throttle = memcache.get(ip)
+            if throttle:
+                throttle = throttle - datetime.now()
+                jsonResponse(self, {
+                    'status': 'throttled',
+                    'remaining': throttle.seconds
+                })
+                return
+            else:
+                throttle = datetime.now() + timedelta(seconds=settings.THROTTLE_LIFE)
+                memcache.set(ip, throttle, settings.THROTTLE_LIFE)
+                
+        
+        
+        method          = self.request.get("method", None)
+        number          = self.request.get("number", None)
+        random_text     = self.request.get("random_text", None)
 
         cursor = self.request.get("cursor", None)
         
@@ -136,7 +153,7 @@ class VotesHandler(webapp.RequestHandler):
                 "next_cursor"   : next_cursor
             }
             if settings.CACHE:
-                memcache.set(key, result, 600)
+                memcache.set(key, result, settings.CACHE_LIFE)
         else:
             result = cached_data
 

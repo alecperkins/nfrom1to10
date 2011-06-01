@@ -75,3 +75,4 @@ img { display: block; position: relative; margin: 0 auto; }
 #spinner { position: relative; margin: 20px auto; }
 
 #graphs { display: none; }
+#graphs .method { margin-bottom: 10px; }

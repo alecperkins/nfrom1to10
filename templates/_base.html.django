@@ -6,7 +6,7 @@
 
         <title>{% block title %}{% endblock %}Pick a number from 1 to 10&hellip;for SCIENCE!</title>
 
-        <script type="none">{{ DEBUG }}</script>
+        <script>DEBUG='{{ DEBUG }}';VERSION='{{ VERSION }}'</script>
 
         {% comment %}
         <script type="text/javascript" async=true src="//www.google-analytics.com/ga.js"></script>

@@ -10,7 +10,8 @@ import settings
 def renderToResponse(handler_instance, template_name, context={}):
     rendered_page = None
     base_context = {
-        'DEBUG': settings.DEBUG
+        'DEBUG'     : settings.DEBUG,
+        'VERSION'   : settings.VERSION
     }
     if settings.CACHE:
         key = "%s-%s" % (settings.VERSION, template_name)

@@ -15,7 +15,7 @@
             Common wisdom says that, when asked "pick a number from 1 to 10", people tend to pick certain numbers more than others, in particular 7 and 4 over the extremes. Turns out this is indeed the case.
         </p>
         <p>
-            I'm still working on additional breakdowns, time permitting. Write-ups on "why?" and "so what?" are <a href="http://craisins.alecperkins.net/tag/pickanumber" title="Posts tagged with Pick A Number">available</a>.
+            Write-ups on "why?" and "so what?" are <a href="http://craisins.alecperkins.net/tag/pickanumber" title="Posts tagged with Pick A Number">available</a>. Additional stats/breakdowns are in-progress.
         </p>
 
         <img id="spinner" src="/static/images/spinner.gif">

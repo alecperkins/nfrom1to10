@@ -9,6 +9,17 @@ class Vote(db.Model):
     showed_random   = db.BooleanProperty()          # True if "random" was said, False if not
     ip              = db.StringProperty()           # ip address of voter
     range           = db.StringProperty()           # number range presented: eg 1-10, 0-9
+    
+    def toJSON(self):
+        return {
+            "date"          : self.date.isoformat(),
+            "number"        : self.number,
+            "method"        : self.method,
+            "pick"          : self.pick,
+            "submit"        : self.submit,
+            "showed_random" : self.showed_random,
+            "ip"            : self.ip
+        }
 
 class Followup(db.Model):
     vote    = db.ReferenceProperty(Vote)

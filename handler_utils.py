@@ -7,6 +7,8 @@ from django.utils import simplejson
 
 import settings
 
+
+
 def renderToResponse(handler_instance, template_name, context={}):
     rendered_page = None
     base_context = {
@@ -29,6 +31,15 @@ def renderToResponse(handler_instance, template_name, context={}):
 
     handler_instance.response.out.write(rendered_page)
 
+
+
 def jsonResponse(handler_instance, data):
+    callback = handler_instance.request.get("callback", "")
+    data = simplejson.dumps(data)
+
+    if callback:
+        data = "%s(%s)" % (callback, data)
+
     handler_instance.response.headers['Content-Type'] = 'application/javascript'
-    handler_instance.response.out.write(simplejson.dumps(data))
+    handler_instance.response.out.write(data)
+

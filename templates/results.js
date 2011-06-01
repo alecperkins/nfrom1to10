@@ -1,20 +1,14 @@
 (function() {
-  var data_url, drawGraphs, generated, getData, i, init, overall_data;
-  $(document).ready(function() {
-    var method, name, _ref;
-    _ref = window.pickers;
-    for (name in _ref) {
-      method = _ref[name];
-      (new method($("#" + (name.toLowerCase()) + "-method"))).render();
-    }
-    return $('.method').show();
-  });
-  data_url = "/data/results";
-    if (typeof data !== "undefined" && data !== null) {
-    data;
+  var data, data_url, drawGraphs, generated, getData, i, init, overall_data, _ref;
+    if ((_ref = window.console) != null) {
+    _ref;
   } else {
-    data = {};
+    window.console = {
+      log: function() {}
+    };
   };
+  data_url = "/data/results";
+  data = {};
   overall_data = (function() {
     var _results;
     _results = [];
@@ -25,14 +19,13 @@
   })();
   generated = null;
   getData = function() {
-    return $.getJSON(data_url, {}, function(response) {
-      var data;
+    return $.get(data_url, {}, function(response) {
       data = response;
       return drawGraphs();
-    });
+    }, "json");
   };
   drawGraphs = function() {
-    var cdata, country, country_graph_data, country_graph_settings, d, datas, graph_boxes, graph_data, graph_opts, i, k, label, main_data, method, new_t, num, overall_opts, random_specified, res, results, sum, t_diff, t_end, t_start, ticks, time_data, time_opts, time_settings, v, _i, _len, _ref, _ref2, _ref3;
+    var cdata, country, country_graph_data, country_graph_settings, d, datas, graph_boxes, graph_data, graph_opts, i, k, label, main_data, method, new_t, num, overall_opts, random_specified, res, results, sum, t_diff, t_end, t_start, ticks, time_data, time_opts, time_settings, v, _i, _len, _ref2, _ref3, _ref4;
     main_data = data.breakdown;
     time_data = data.overtime;
     $("#spinner").hide();
@@ -51,9 +44,9 @@
     for (method in main_data) {
       results = main_data[method];
       graph_opts = [];
-      _ref = ["random_specified", "random_not_specified"];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        random_specified = _ref[_i];
+      _ref2 = ["random_specified", "random_not_specified"];
+      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+        random_specified = _ref2[_i];
         res = results[random_specified];
         label = random_specified.replace(/_/g, " ");
         for (i = 1; i <= 10; i++) {
@@ -110,7 +103,7 @@
       new_t = t_start + (t_diff * i);
       ticks.push(new_t);
     }
-    for (i = 0, _ref2 = ticks.length; 0 <= _ref2 ? i < _ref2 : i > _ref2; 0 <= _ref2 ? i++ : i--) {
+    for (i = 0, _ref3 = ticks.length; 0 <= _ref3 ? i < _ref3 : i > _ref3; 0 <= _ref3 ? i++ : i--) {
       d = new Date(ticks[i] * 1000);
       ticks[i] = [ticks[i], "" + (d.getFullYear()) + "-" + (d.getMonth() + 1) + "-" + (d.getDate()) + " " + (d.getHours()) + ":" + (d.getMinutes())];
     }
@@ -124,9 +117,9 @@
     for (country in country_data) {
       cdata = country_data[country];
       d = [];
-      _ref3 = cdata.data;
-      for (k in _ref3) {
-        v = _ref3[k];
+      _ref4 = cdata.data;
+      for (k in _ref4) {
+        v = _ref4[k];
         d.push([parseInt(k), v / cdata.total]);
       }
       country_graph_data.push({
@@ -153,7 +146,14 @@
     return $("#as-of").html("Here's a breakdown as of <strong>" + generated + "</strong><br>Total votes: <strong>" + sum + "</strong>");
   };
   init = function() {
-    return getData();
+    var method, name, _ref2;
+    getData();
+    _ref2 = window.pickers;
+    for (name in _ref2) {
+      method = _ref2[name];
+      (new method($("#" + (name.toLowerCase()) + "-method"))).render();
+    }
+    return $('.method').show();
   };
   $(document).ready(init);
 }).call(this);

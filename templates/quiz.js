@@ -26,7 +26,14 @@
     t_start = null;
     function Quiz() {
       this.submitFollowup = __bind(this.submitFollowup, this);
-      this.submit = __bind(this.submit, this);      var choice;
+      this.submit = __bind(this.submit, this);      var choice, current_random;
+      if (Math.floor(Math.random() * 2) === 0) {
+        current_random = true;
+        $("h1 > span").text("Pick a random number from 1 to 10");
+      } else {
+        current_random = false;
+      }
+      $("h1").css("color", "");
       this.number = null;
       choice = window.picker_options[Math.floor(Math.random() * 4)];
       this.active_picker = new window.pickers[choice]($('#methods'));

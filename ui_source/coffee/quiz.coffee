@@ -22,6 +22,13 @@ class Quiz
     t_start = null
 
     constructor: ->
+        if Math.floor(Math.random()*2) is 0
+            current_random = true
+            $("h1 > span").text("Pick a random number from 1 to 10")
+        else
+            current_random = false
+        $("h1").css("color","")
+
         @number = null
         choice = window.picker_options[Math.floor(Math.random()*4)]
         @active_picker = new window.pickers[choice]($('#methods'))

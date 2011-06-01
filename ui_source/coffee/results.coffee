@@ -1,10 +1,8 @@
-$(document).ready ->
-    for name, method of window.pickers
-        (new method($("##{ name.toLowerCase() }-method"))).render()
-    $('.method').show()
+window.console ?=
+  log:->
 
 data_url = "/data/results"
-data ?= {}
+data = {}
 
 
 
@@ -14,10 +12,12 @@ overall_data = ([i,0] for i in [1..10])
 generated = null
 
 getData = ->
-    $.getJSON data_url, {}, (response) ->
+    $.get data_url, {}, (response) ->
          data = response
          drawGraphs()
+    , "json"
     #drawGraphs()
+
 
 
 drawGraphs = ->
@@ -27,13 +27,13 @@ drawGraphs = ->
     $("#spinner").hide()
     $("#graphs").show()
     graph_boxes =
-        overall: $("#overview-graph")
-        input: $("#input-graph")
-        radio: $("#radio-graph")
-        select: $("#select-graph")
-        slider: $("#slider-graph")
-        overtime: $("#overtime-graph")
-        country: $("#country-graph")
+        overall     : $("#overview-graph")
+        input       : $("#input-graph")
+        radio       : $("#radio-graph")
+        select      : $("#select-graph")
+        slider      : $("#slider-graph")
+        overtime    : $("#overtime-graph")
+        country     : $("#country-graph")
 
     generated = main_data.input.random_not_specified.generated
 
@@ -126,5 +126,8 @@ drawGraphs = ->
 
 init = ->
     getData()
+    for name, method of window.pickers
+        (new method($("##{ name.toLowerCase() }-method"))).render()
+    $('.method').show()
 
 $(document).ready(init)

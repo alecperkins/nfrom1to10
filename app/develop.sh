@@ -3,7 +3,7 @@
 # Launches development environment stuff
   
   osascript <<-eof
-    set app_directory to "~/Projects/nfrom1to10/"
+    set app_directory to "~/projects/nfrom1to10/app"
     
 	tell application "iTerm"
 
@@ -22,7 +22,7 @@
 			tell the last session
 				set name to "CoffeeScript"
 				write text "cd " & app_directory
-				write text "coffee -o templates/ -w -c ui_source/coffee/*.coffee"
+				write text "coffee -o templates/js/ -w -c ui_source/coffee/*.coffee"
 			end tell
 
 			launch session "Default session"

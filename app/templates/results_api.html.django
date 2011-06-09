@@ -2,10 +2,6 @@
 
 {% block title %}API and Source Code for {% endblock %}
 
-{% block extra_head %}
-    {{ block.super }}
-{% endblock %}
-
 {% block results_api %}selected{% endblock %}
 
 {% block content %}

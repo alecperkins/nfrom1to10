@@ -1,8 +1,15 @@
 {% extends "_base.html.django" %}
 
 {% block extra_head %}
-    <script type="text/javascript">{% include "pickers.js" %}</script>
-    <script type="text/javascript">{% include "quiz.js" %}</script>
+    <script type="text/javascript">
+        {% if DEBUG %}
+            {% include "js/pickers.js" %}
+            {% include "js/quiz.js" %}
+        {% else %}
+            {% include "js/pickers-min.js" %}
+            {% include "js/quiz-min.js" %}
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block body %}

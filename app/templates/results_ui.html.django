@@ -5,8 +5,15 @@
 {% block extra_head %}
     {{ block.super }}
     <script type="text/javascript">window.data = {{ data }}</script>
-    <script type="text/javascript">{% include "pickers.js" %}</script>
-    <script type="text/javascript">{% include "results_ui.js" %}</script>
+    <script type="text/javascript">
+        {% if DEBUG %}
+            {% include "js/pickers.js" %}
+            {% include "js/results_ui.js" %}
+        {% else %}
+            {% include "js/pickers-min.js" %}
+            {% include "js/results_ui-min.js" %}
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block results_ui %}selected{% endblock %}

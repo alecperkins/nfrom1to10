@@ -5,8 +5,15 @@
 {% block extra_head %}
     {{ block.super }}
     <script type="text/javascript">window.data = {{ data }}</script>
-    <script type="text/javascript">{% include "country_data.js" %}</script>
-    <script type="text/javascript">{% include "results_overview.js" %}</script>
+    <script type="text/javascript">
+        {% if DEBUG %}
+            {% include "js/country_data.js" %}
+            {% include "js/results_overview.js" %}
+        {% else %}
+            {% include "js/country_data-min.js" %}
+            {% include "js/results_overview-min.js" %}
+        {% endif %}
+    </script>
 {% endblock %}
 
 {% block results_overview %}selected{% endblock %}

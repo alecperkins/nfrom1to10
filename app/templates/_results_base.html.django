@@ -3,7 +3,7 @@
 {% block title %}Results for {% endblock %}
 
 {% block extra_head %}
-    <script type="text/javascript">{% include "jquery.flot-min.js" %}</script>
+    <script type="text/javascript">{% include "js/jquery.flot-min.js" %}</script>
 {% endblock %}
 
 {% block body %}

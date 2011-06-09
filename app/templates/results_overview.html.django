@@ -26,19 +26,21 @@
         Write-ups on "why?" and "so what?" are <a href="http://craisins.alecperkins.net/tag/pickanumber" title="Posts tagged with Pick A Number">available</a>. There also are good discussions on <a href="http://news.ycombinator.com/item?id=2375149">Hacker</a> <a href="http://news.ycombinator.com/item?id=2376985">News</a>. Additional stats/breakdowns are in-progress. The follow-up questions are a recent addition, so it will be a short while before there is enough data to present.
     </p>
 
+    <h3>Overall</h3>
     <p id="as-of"></p>
-
-    <h2>Overall</h2>
+    <div id="overview-graph" class="graph"></div>
     <p>
         If people were good random number generators, this graph would be just about flat. Instead, 7 and 4 are clearly favored over the others, especially 1, 2, 9, and 10.
     </p>
-    <div id="overview-graph" class="graph"></div>
     
-    <h2>Top 5 Countries</h2>
+    <h3>Top 5 Countries</h3>
     <p>(as fraction of their total)</p>
     <div id="country-graph" class="graph"></div>
     
-    <h2>Over Time</h2>
+    <h3>Over Time</h3>
     <p>(first 24 hours)</p>
     <div id="overtime-graph" class="graph"></div>
+    <p>
+        The general distribution appeared almost right away. Except for occasionally trading places with the number closest in frequency, each number tended to stay in its relative position in the distribution as the experiment continued.
+    </p>
 {% endblock %}

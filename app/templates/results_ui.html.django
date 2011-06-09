@@ -28,16 +28,30 @@
     <h3>Input</h3>
     <div id="input-method" style="display:none;" class="method"></div>
     <div id="input-graph" class="graph"></div>
+    <p>
+        A standard text input field. This was expected to be the most "natural" one, since it does not cue the user, or have any sort of default.
+    </p>
 
     <h3>Slider</h3>
     <div id="slider-method" style="display:none;" class="method"></div>
     <div id="slider-graph" class="graph"></div>
+    <p>
+        A slider, with a default of 1. Unlike the others, this method has a default, which shows itself in the data.
+    </p>
+
 
     <h3>Select</h3>
     <div id="select-method" style="display:none;" class="method"></div>
     <div id="select-graph" class="graph"></div>
+    <p>
+        A select-type input. While it doesn't have a default, on hover it does tend to leave the mouse ending up just to the right of middle, where 6 is.
+    </p>
+
 
     <h3>Radio</h3>
     <div id="radio-method" style="display:none;" class="method"></div>
     <div id="radio-graph" class="graph"></div>
+    <p>
+        A radio-type input. There isn't a default, and no quirk of the UI to bias the result like the Select method. But, like the Slider and Select, it does introduce a spatial component, so the relative position of the number in the line may be a factor.
+    </p>
 {% endblock %}

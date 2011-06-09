@@ -1,0 +1,44 @@
+body
+    overflow-y  : scroll
+#footer
+    font-size   : 12px
+    margin      : 40px auto
+    text-align  : center
+    border-top  : 1px solid black
+    padding-top : 10px
+    a
+        color       : black
+        font-weight : bold
+        &:hover
+            color           : $link_color
+            text-decoration : none
+
+.graph
+    width           : 650px
+    height          : 300px
+    margin-bottom   : 2em
+
+.method
+    margin-bottom   : 10px
+
+#subnav
+    border-bottom   : 1px solid black
+    text-align      : center
+    margin-top      : -2em
+    a
+        font-size       : 1.1em
+        font-weight     : bold
+        border          : 1px solid transparent
+        padding         : 5px
+        display         : inline-block
+        width           : 100px
+        margin-bottom   : -1px
+        &.selected
+            color               : black
+            border-color        : black
+            border-bottom-color : white
+
+pre
+    overflow-x: auto
+    border: 1px solid #ccc
+    padding: 5px

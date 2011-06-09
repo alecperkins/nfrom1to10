@@ -4,74 +4,139 @@
 from datetime import datetime, timedelta
 import time
 
+from django.utils import simplejson
+
 from google.appengine.api import memcache
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 from models import VoteStat, HourNumberCount, Vote
-from handler_utils import renderToResponse, jsonResponse
+from handler_utils import renderToResponse, jsonResponse, RedirectSlashHandler
 import settings
 
 OPTIONS = ("input","radio","select","slider")
 
-class ResultsHandler(webapp.RequestHandler):
-    def get(self):
-        # result = {
-        #     method: [count, count, count...]
-        # }
-        result = {
-            "breakdown": {
-                "input"     :{},
-                "select"    :{},
-                "slider"    :{},
-                "radio"     :{},
-            },
-            "overtime": []
+
+
+def assembleData(json=False):
+    if settings.CACHE:
+        ui_breakdown    = memcache.get("%s-results-ui_breakdown" % settings.VERSION)
+        overtime        = memcache.get("%s-results-overtime" % settings.VERSION)
+    else:
+        ui_breakdown    = None
+        overtime        = None
+
+
+    if ui_breakdown is None:
+        ui_breakdown = {
+            "input"     :{},
+            "select"    :{},
+            "slider"    :{},
+            "radio"     :{},
         }
 
-        if settings.CACHE:
-            cached_breakdown = memcache.get("%s-results-breakdown" % settings.VERSION)
-        else:
-            cached_breakdown = None
+        for m in ui_breakdown:
+            ui_breakdown[m]["random_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+            ui_breakdown[m]["random_not_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
 
-        if cached_breakdown is not None:
-            result["breakdown"] = cached_breakdown
-        else:
-            for m in result["breakdown"]:
-                result["breakdown"][m]["random_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
-                result["breakdown"][m]["random_not_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+        stats = VoteStat.all().filter("showed_random !=", None)
+        for stat in stats:
+            if stat.showed_random:
+                random_text = "random_specified"
+            else:
+                random_text = "random_not_specified"
+            ui_breakdown[stat.method][random_text]["data"][stat.number-1] = stat.count
+            ui_breakdown[stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
 
-            stats = VoteStat.all().filter("showed_random !=", None)
-            for stat in stats:
-                if stat.showed_random:
-                    random_text = "random_specified"
-                else:
-                    random_text = "random_not_specified"
-                result["breakdown"][stat.method][random_text]["data"][stat.number-1] = stat.count
-                result["breakdown"][stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
-            
-            if settings.CACHE:
-                memcache.add("%s-results-breakdown" % settings.VERSION, result["breakdown"], settings.CACHE_LIFE)
+    if overtime is None:
+        overtime = [ [] for n in range(0,10) ]
 
-        if settings.CACHE:
-            cached_overtime = memcache.get("%s-results-overtime" % settings.VERSION)
-        else:
-            cached_overtime = None
-        if cached_overtime is not None:
-            result["overtime"] = cached_overtime
-        else:
-            result["overtime"] = [ [] for n in range(0,10) ]
-            
-            hend = datetime(2011,3,28,17,11,56)
-            hourcount = HourNumberCount.all().filter("hour_end <", hend)
-            for stat in hourcount:
-                t = time.mktime(stat.hour_start.timetuple())
-                c = stat.count
-                result["overtime"][stat.number-1].append( (t,c) )
-            if settings.CACHE:
-                memcache.add("%s-results-overtime" % settings.VERSION, result["overtime"], settings.CACHE_LIFE)
-            
-        jsonResponse(self, result)
+        hend = datetime(2011,3,28,17,11,56)
+
+        hourcount = HourNumberCount.all().filter("hour_end <", hend)
+
+        for stat in hourcount:
+            t = time.mktime(stat.hour_start.timetuple())
+            c = stat.count
+            overtime[stat.number-1].append( (t,c) )
+
+    if settings.CACHE:
+        memcache.add("%s-results-ui_breakdown" % settings.VERSION, ui_breakdown, settings.CACHE_LIFE)
+        memcache.add("%s-results-overtime" % settings.VERSION, overtime, settings.CACHE_LIFE)    
+
+    result = {
+        "ui_breakdown"  : ui_breakdown,
+        "over_time"     : overtime,
+    }
+    if json:
+        return simplejson.dumps(result)
+    else:
+        return result
+
+
+
+class OverviewHandler(webapp.RequestHandler):
+    def get(self):
+        jsonResponse(self, assembleData())
+# 
+# class ResultsHandler(webapp.RequestHandler):
+#     def get(self):
+#         # result = {
+#         #     method: [count, count, count...]
+#         # }
+#         result = {
+#             "breakdown": {
+#                 "input"     :{},
+#                 "select"    :{},
+#                 "slider"    :{},
+#                 "radio"     :{},
+#             },
+#             "overtime": []
+#         }
+# 
+#         if settings.CACHE:
+#             cached_breakdown = memcache.get("%s-results-breakdown" % settings.VERSION)
+#         else:
+#             cached_breakdown = None
+# 
+#         if cached_breakdown is not None:
+#             result["breakdown"] = cached_breakdown
+#         else:
+#             for m in result["breakdown"]:
+#                 result["breakdown"][m]["random_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+#                 result["breakdown"][m]["random_not_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
+# 
+#             stats = VoteStat.all().filter("showed_random !=", None)
+#             for stat in stats:
+#                 if stat.showed_random:
+#                     random_text = "random_specified"
+#                 else:
+#                     random_text = "random_not_specified"
+#                 result["breakdown"][stat.method][random_text]["data"][stat.number-1] = stat.count
+#                 result["breakdown"][stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
+#             
+#             if settings.CACHE:
+#                 memcache.add("%s-results-breakdown" % settings.VERSION, result["breakdown"], settings.CACHE_LIFE)
+# 
+#         if settings.CACHE:
+#             cached_overtime = memcache.get("%s-results-overtime" % settings.VERSION)
+#         else:
+#             cached_overtime = None
+#         if cached_overtime is not None:
+#             result["overtime"] = cached_overtime
+#         else:
+#             result["overtime"] = [ [] for n in range(0,10) ]
+#             
+#             hend = datetime(2011,3,28,17,11,56)
+#             hourcount = HourNumberCount.all().filter("hour_end <", hend)
+#             for stat in hourcount:
+#                 t = time.mktime(stat.hour_start.timetuple())
+#                 c = stat.count
+#                 result["overtime"][stat.number-1].append( (t,c) )
+#             if settings.CACHE:
+#                 memcache.add("%s-results-overtime" % settings.VERSION, result["overtime"], settings.CACHE_LIFE)
+#             
+#         jsonResponse(self, result)
 
 class VotesHandler(webapp.RequestHandler):
     def get(self):
@@ -88,7 +153,6 @@ class VotesHandler(webapp.RequestHandler):
             else:
                 throttle = datetime.now() + timedelta(seconds=settings.THROTTLE_LIFE)
                 memcache.set(ip, throttle, settings.THROTTLE_LIFE)
-                
         
         
         method          = self.request.get("method", None)
@@ -162,8 +226,10 @@ class VotesHandler(webapp.RequestHandler):
 
 def main():
     application = webapp.WSGIApplication([
-                                ('/data/results',   ResultsHandler),
-                                ('/data/votes',     VotesHandler),
+                                ('/data/overview/', OverviewHandler),
+                                ('/data/votes/',    VotesHandler),
+                                ('/data/overview',  RedirectSlashHandler),
+                                ('/data/votes',     RedirectSlashHandler),
                                 ],debug=settings.DEBUG)
     util.run_wsgi_app(application)
 

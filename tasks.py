@@ -10,6 +10,9 @@ from google.appengine.ext.webapp import util
 from datetime import datetime
 
 class StartTallysHandler(webapp.RequestHandler):
+    def get(self):
+        self.post()
+
     def post(self):
         # /tasks/tally-votes
         for method in OPTIONS:

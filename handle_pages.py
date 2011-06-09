@@ -2,12 +2,17 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 
 from models import doVote, doFollowup
-from handler_utils import renderToResponse, jsonResponse
+from handler_utils import renderToResponse, jsonResponse, RedirectSlashHandler
+from handle_data import assembleData
 import settings
+
+
 
 class MainHandler(webapp.RequestHandler):
     def get(self):
         renderToResponse(self, 'index.html.django')
+
+
 
 class VoteHandler(webapp.RequestHandler):
     def post(self):
@@ -29,6 +34,8 @@ class VoteHandler(webapp.RequestHandler):
 
         jsonResponse(self, result)
 
+
+
 class FollowupHandler(webapp.RequestHandler):
     def post(self):
         vote_id         = self.request.get('vote_id', None)
@@ -44,21 +51,45 @@ class FollowupHandler(webapp.RequestHandler):
 
         jsonResponse(self, result)
 
-class ResultHandler(webapp.RequestHandler):
-    def get(self):
-        renderToResponse(self, 'results.html.django')
 
-class RedirectResultHandler(webapp.RequestHandler):
+
+class ResultOverviewHandler(webapp.RequestHandler):
     def get(self):
-        self.redirect('/results/')
+        renderToResponse(self, 'results_overview.html.django', context={
+            "data": assembleData(json=True)
+        })
+
+
+
+class ResultUIHandler(webapp.RequestHandler):
+    def get(self):
+        renderToResponse(self, 'results_ui.html.django', context={
+            "data": assembleData(json=True)
+        })
+
+
+
+class ResultApiHandler(webapp.RequestHandler):
+    def get(self):
+        renderToResponse(self, 'results_api.html.django')
+
+
+
+
+
+
 
 def main():
     application = webapp.WSGIApplication([
-                                ('/',           MainHandler),
-                                ('/vote/',      VoteHandler),
-                                ('/followup/',  FollowupHandler),
-                                ('/results',    RedirectResultHandler),
-                                ('/results/',   ResultHandler),
+                                ('/',               MainHandler),
+                                ('/vote/',          VoteHandler),
+                                ('/followup/',      FollowupHandler),
+                                ('/results/',       ResultOverviewHandler),
+                                ('/results/ui/',    ResultUIHandler),
+                                ('/results/api/',   ResultApiHandler),
+                                ('/results',        RedirectSlashHandler),
+                                ('/results/ui',     RedirectSlashHandler),
+                                ('/results/api',    RedirectSlashHandler),
                                 ],debug=settings.DEBUG)
     util.run_wsgi_app(application)
 

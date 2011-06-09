@@ -1,6 +1,7 @@
 import os
 
 from google.appengine.api import memcache
+from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
 from django.utils import simplejson
@@ -9,11 +10,19 @@ import settings
 
 
 
+class RedirectSlashHandler(webapp.RequestHandler):
+    def get(self):
+        self.redirect("%s/" % self.request.url)
+
+
+
 def renderToResponse(handler_instance, template_name, context={}):
     rendered_page = None
     base_context = {
-        'DEBUG'     : settings.DEBUG,
-        'VERSION'   : settings.VERSION
+        'DEBUG'         : settings.DEBUG,
+        'VERSION'       : settings.VERSION,
+        'THROTTLE_API'  : settings.THROTTLE_API,
+        'THROTTLE_LIFE' : settings.THROTTLE_LIFE,
     }
     if settings.CACHE:
         key = "%s-%s" % (settings.VERSION, template_name)

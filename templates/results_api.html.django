@@ -1,0 +1,89 @@
+{% extends "_results_base.html.django" %}
+
+{% block title %}API and Source Code for {% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+{% endblock %}
+
+{% block results_api %}selected{% endblock %}
+
+{% block content %}
+    <h3><a href="/data/votes/">/data/votes/</a></h3>
+    <p>
+        You can access the raw, unprocessed vote data yourself, in JSON-formatted batches of 1000 votes. Simply send a GET request (JSONP supported) to <a href="/data/votes/">/data/votes/</a>. You can limit your query to a certain number, method, or whether or not "random" was specified (and any combination of these parameters). The number of results can be restricted as well.
+    </p>
+    <p>
+        Possible parameters:
+    </p>
+    <pre><code>
+    ?method=[input, radio, select, slider]
+    ?random_text=[hidden, visible]
+    ?number=[1,2,3,...,9,10]
+    ?limit=[1,2,3,...,999,1000]
+    </code></pre>
+
+    <p>
+        The response will look like:
+    </p>
+    <pre><code>
+{
+    "objects": 
+    [
+        {
+             "showed_random"    : true,                             // Whether or not "random" was specified
+             "ip"               : null,                             // IP address of the voter, if available, for dup-checking and geolocating
+             "number"           : 7,                                // number chosen
+             "submit"           : 30606,                            // milliseconds from page load to number submission
+             "pick"             : 29410,                            // milliseconds from page load to number picking
+             "date"             : "2011-03-27T16:11:56.574627",     // Date & time 
+             "method"           : "input"                           // UI method
+        },
+         
+        {
+             "showed_random"    : false,
+             "ip"               : "127.0.0.1",
+             "number"           : 4,
+             "submit"           : 5535,
+             "pick"             : 3906,
+             "date"             : "2011-03-27T16:24:12.652296",
+             "method"           : "radio"
+        },
+
+    ...
+    
+    ],
+     "next_cursor": "E-ABAIICGWoKbmZyb20xdG8xMHILCxIEVm90ZRjqBwwU"
+}
+    </code></pre>
+    <p>
+        To 'page' through the batches, specify the cursor parameter provided in the previous response (<code>"next_cursor": "E-adsDFje&hellip;</code>). Cursors are query specific, so make sure you use the same parameters. Also, keep in mind the results are not ordered, nor a random sample.
+    </p>
+    {% if THROTTLE_API %}
+        <p>
+            Note: each IP address is limited to one request per {{ THROTTLE_LIFE }} seconds, and the maximum number of simultaneous active requests globally is 5. If throttled, the response will be
+        </p>
+        <pre><code>
+{
+    "status"    : "throttled",
+    "remaining" : 60             // number of seconds until next request can be made
+}
+        </code></pre>
+        <p>
+            If there are too many requests, the response will be:
+        </p>
+        <pre><code>
+{
+    "status"    : "toobusy"
+}
+        </code></pre>
+        <p>
+            though you can try again immediately.
+        </p>
+    {% endif %}
+    <h3><a href="/data/overview/">/data/overview/</a></h3>
+    <p>
+        The data used by the Overview and UI results pages is also available in JSON format, at <a href="/data/overview/">/data/overview/</a>.{% if THROTTLE_API %} (Overview data is not throttled.){% endif %}
+    </p>
+
+{% endblock %}

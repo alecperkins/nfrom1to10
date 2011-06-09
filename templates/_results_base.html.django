@@ -1,0 +1,28 @@
+{% extends "_base.html.django" %}
+
+{% block title %}Results for {% endblock %}
+
+{% block extra_head %}
+    <script type="text/javascript">{% include "jquery.flot-min.js" %}</script>
+{% endblock %}
+
+{% block body %}
+        <h1>Some results</h1>
+        <div id="subnav">
+            <a class="{% block results_overview %}{% endblock %}"   href="/results/">Overview</a>
+            <a class="{% block results_ui %}{% endblock %}"         href="/results/ui/">UIs</a>
+            <a class="{% block results_api %}{% endblock %}"        href="/results/api/">API</a>
+        </div>
+        {% block content %}{% endblock %}
+
+        <div id="footer">
+            <a href="http://alecperkins.net" title="Alec Perkins: Designer with a coding problem" rel="author">Who?</a> -
+            <a href="http://craisins.alecperkins.net/tag/pickanumber" title="Posts tagged with Pick A Number">Why?</a> -
+            <div style="width: 140px; display: inline-block; vertical-align: middle;">
+                <a href="http://twitter.com/alecperkins" class="twitter-follow-button" data-show-count="false">Follow @alecperkins</a>
+            </div>for updates about this experiment.
+            <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script> 
+            <a href="https://github.com/alecperkins/nfrom1to10">Source Code</a>
+        </div>
+
+{% endblock %}

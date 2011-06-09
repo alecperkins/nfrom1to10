@@ -7,7 +7,7 @@ generated = null
 
 drawGraphs = ->
     main_data = data.ui_breakdown
-    time_data = data.overtime
+    time_data = data.over_time
 
     graph_boxes =
         overall     : $("#overview-graph")

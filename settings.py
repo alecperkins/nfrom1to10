@@ -1,9 +1,9 @@
 import os
 
-CACHE = False
-CACHE_LIFE = 1800
-THROTTLE_API = True
-THROTTLE_LIFE = 60
+CACHE           = False
+CACHE_LIFE      = 1800
+THROTTLE_API    = True
+THROTTLE_LIFE   = 60
 
 VERSION = os.environ['CURRENT_VERSION_ID']
 

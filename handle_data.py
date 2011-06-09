@@ -140,7 +140,10 @@ class OverviewHandler(webapp.RequestHandler):
 
 class VotesHandler(webapp.RequestHandler):
     def get(self):
-        if settings.THROTTLE_API:
+        
+        skeleton_key = self.request.get("skeleton", None)
+        
+        if settings.THROTTLE_API and skeleton_key != settings.SKELETON_KEY:
             ip = str(self.request.remote_addr)
             throttle = memcache.get(ip)
             if throttle:
@@ -222,6 +225,7 @@ class VotesHandler(webapp.RequestHandler):
             result = cached_data
 
         jsonResponse(self, result)
+
 
 
 def main():

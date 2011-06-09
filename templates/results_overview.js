@@ -19,7 +19,7 @@
   drawGraphs = function() {
     var cdata, country, country_graph_data, country_graph_settings, d, datas, graph_boxes, graph_opts, i, k, main_data, method, new_t, num, overall_opts, random_specified, res, results, sum, t_diff, t_end, t_start, ticks, time_data, time_opts, time_settings, v, _i, _len, _ref2, _ref3, _ref4;
     main_data = data.ui_breakdown;
-    time_data = data.overtime;
+    time_data = data.over_time;
     graph_boxes = {
       overall: $("#overview-graph"),
       overtime: $("#overtime-graph"),

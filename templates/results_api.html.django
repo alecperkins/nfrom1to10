@@ -17,10 +17,10 @@
         Possible parameters:
     </p>
     <pre><code>
-    ?method=[input, radio, select, slider]
-    ?random_text=[hidden, visible]
-    ?number=[1,2,3,...,9,10]
-    ?limit=[1,2,3,...,999,1000]
+    ?method=        [input, radio, select, slider]
+    ?random_text=   [hidden, visible]
+    ?number=        [1,2,3,...,9,10]
+    ?limit=         [1,2,3,...,999,1000]
     </code></pre>
 
     <p>
@@ -61,7 +61,7 @@
     </p>
     {% if THROTTLE_API %}
         <p>
-            Note: each IP address is limited to one request per {{ THROTTLE_LIFE }} seconds, and the maximum number of simultaneous active requests globally is 5. If throttled, the response will be
+            Note: each IP address is limited to one request per {{ THROTTLE_LIFE }} seconds. If throttled, the response will be
         </p>
         <pre><code>
 {
@@ -69,21 +69,37 @@
     "remaining" : 60             // number of seconds until next request can be made
 }
         </code></pre>
-        <p>
-            If there are too many requests, the response will be:
-        </p>
-        <pre><code>
-{
-    "status"    : "toobusy"
-}
-        </code></pre>
-        <p>
-            though you can try again immediately.
-        </p>
     {% endif %}
     <h3><a href="/data/overview/">/data/overview/</a></h3>
     <p>
-        The data used by the Overview and UI results pages is also available in JSON format, at <a href="/data/overview/">/data/overview/</a>.{% if THROTTLE_API %} (Overview data is not throttled.){% endif %}
+        The data used by the Overview and UI results pages is also available in JSON format, at <a href="/data/overview/">/data/overview/</a>.{% if THROTTLE_API %} (Overview data is not throttled.){% endif %} The response looks like:
     </p>
+    <pre><code>
+{
+    "ui_breakdown": {
+        "method": {
+            "random_not_specified": {
+                "generated": "UTC time stat generated",
+                "data": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]     // count per number
+            },
+            "random_specified": {
+                "generated": "2011-06-01 02:49 UTC",
+                "data": [2030, 2952, 4235, 4756, 4664, 4379, 6795, 4139, 2750, 1260]
+            }
+        },
+        "radio": {
+            "random_not_specified": {
+                "generated": "2011-06-01 02:49 UTC",
+                "data": [2031, 2782, 4198, 5729, 4610, 5063, 6730, 3220, 2226, 2034]
+            },
+            "random_specified": {
+                "generated": "2011-06-01 02:49 UTC",
+                "data": [2030, 2695, 4123, 5805, 4618, 5270, 6544, 3203, 2229, 1866]
+            }
+        },
+    },
+    "over_time": [] // nested arrays, with counts by each number and hour slot
+}
+    </code></pre>
 
 {% endblock %}

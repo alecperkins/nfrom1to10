@@ -15,7 +15,7 @@ DEBUG = (ENVIRONMENT == "local")
 CACHE           = not DEBUG
 CACHE_LIFE      = 1800  # num seconds to cache stuff
 THROTTLE_API    = True
-THROTTLE_LIFE   = 60    # num seconds per IP per request
+THROTTLE_LIFE   = 30    # num seconds per IP per request
 
 VERSION = os.environ['CURRENT_VERSION_ID']
 

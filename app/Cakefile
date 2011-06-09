@@ -2,7 +2,7 @@ util    = require('util')
 exec    = require('child_process').exec
 child   = null
 
-files   = [
+js_files   = [
     'country_data'
     'pickers'
     'quiz'
@@ -10,12 +10,14 @@ files   = [
     'results_ui'
 ]
 
-task 'closure', 'pass js through closure-compiler', (options) ->
-    for file in files
-        command = "closure --js_output_file templates/js/#{ file }-min.js --js templates/js/#{ file }.js"
-        console.log "executing #{ command }"
-        child = exec command, (error, stdout, stderr) ->
+task 'build', 'min js, compile sass', (options) ->
+    commands = ("closure --js_output_file templates/js/#{ file }-min.js --js templates/js/#{ file }.js" for file in js_files)
+    commands.push "compass compile -f -s compressed"
+
+    for command in commands
+        exec command, (error, stdout, stderr) ->
             console.log "stdout: #{ stdout }"
             console.log "stderr: #{ stderr }"
             if error?
                 console.log "exec error: #{ error }"
+

@@ -62,7 +62,7 @@
         <pre><code>
 {
     "status"    : "throttled",
-    "remaining" : 60             // number of seconds until next request can be made
+    "remaining" : {{ THROTTLE_LIFE }}             // number of seconds until next request can be made
 }
         </code></pre>
     {% endif %}

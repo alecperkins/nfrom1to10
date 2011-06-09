@@ -2,7 +2,7 @@
 
 # Project settings
 project_type = :stand_alone
-output_style = :compressed
+output_style = :compact
 line_comments = false
 # Set this to the root of your project when deployed:
 http_path = "/"

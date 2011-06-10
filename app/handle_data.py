@@ -26,7 +26,6 @@ def assembleData(json=False):
         ui_breakdown    = None
         overtime        = None
 
-
     if ui_breakdown is None:
         ui_breakdown = {
             "input"     :{},
@@ -78,71 +77,14 @@ def assembleData(json=False):
 class OverviewHandler(webapp.RequestHandler):
     def get(self):
         jsonResponse(self, assembleData())
-# 
-# class ResultsHandler(webapp.RequestHandler):
-#     def get(self):
-#         # result = {
-#         #     method: [count, count, count...]
-#         # }
-#         result = {
-#             "breakdown": {
-#                 "input"     :{},
-#                 "select"    :{},
-#                 "slider"    :{},
-#                 "radio"     :{},
-#             },
-#             "overtime": []
-#         }
-# 
-#         if settings.CACHE:
-#             cached_breakdown = memcache.get("%s-results-breakdown" % settings.VERSION)
-#         else:
-#             cached_breakdown = None
-# 
-#         if cached_breakdown is not None:
-#             result["breakdown"] = cached_breakdown
-#         else:
-#             for m in result["breakdown"]:
-#                 result["breakdown"][m]["random_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
-#                 result["breakdown"][m]["random_not_specified"] = { "data": [0,0,0,0,0,0,0,0,0,0] }
-# 
-#             stats = VoteStat.all().filter("showed_random !=", None)
-#             for stat in stats:
-#                 if stat.showed_random:
-#                     random_text = "random_specified"
-#                 else:
-#                     random_text = "random_not_specified"
-#                 result["breakdown"][stat.method][random_text]["data"][stat.number-1] = stat.count
-#                 result["breakdown"][stat.method][random_text]["generated"] = "%s UTC" % stat.generated.strftime("%Y-%m-%d %H:%M")
-#             
-#             if settings.CACHE:
-#                 memcache.add("%s-results-breakdown" % settings.VERSION, result["breakdown"], settings.CACHE_LIFE)
-# 
-#         if settings.CACHE:
-#             cached_overtime = memcache.get("%s-results-overtime" % settings.VERSION)
-#         else:
-#             cached_overtime = None
-#         if cached_overtime is not None:
-#             result["overtime"] = cached_overtime
-#         else:
-#             result["overtime"] = [ [] for n in range(0,10) ]
-#             
-#             hend = datetime(2011,3,28,17,11,56)
-#             hourcount = HourNumberCount.all().filter("hour_end <", hend)
-#             for stat in hourcount:
-#                 t = time.mktime(stat.hour_start.timetuple())
-#                 c = stat.count
-#                 result["overtime"][stat.number-1].append( (t,c) )
-#             if settings.CACHE:
-#                 memcache.add("%s-results-overtime" % settings.VERSION, result["overtime"], settings.CACHE_LIFE)
-#             
-#         jsonResponse(self, result)
+
+
 
 class VotesHandler(webapp.RequestHandler):
     def get(self):
-        
+
         skeleton_key = self.request.get("skeleton", None)
-        
+
         if settings.THROTTLE_API and skeleton_key != settings.SKELETON_KEY:
             ip = str(self.request.remote_addr)
             throttle = memcache.get(ip)
@@ -156,14 +98,13 @@ class VotesHandler(webapp.RequestHandler):
             else:
                 throttle = datetime.now() + timedelta(seconds=settings.THROTTLE_LIFE)
                 memcache.set(ip, throttle, settings.THROTTLE_LIFE)
-        
-        
+
         method          = self.request.get("method", None)
         number          = self.request.get("number", None)
         random_text     = self.request.get("random_text", None)
 
         cursor = self.request.get("cursor", None)
-        
+
         showed_random = None
         if random_text:
             if random_text == 'visible':
@@ -216,10 +157,10 @@ class VotesHandler(webapp.RequestHandler):
             next_cursor = q.cursor() if len(data) == LIMIT else None
 
             result = {
-                "objects"       : [vote.toJSON() for vote in data],
+                "objects"       : [vote.toJSON(full=(skeleton_key is not None)) for vote in data],
                 "next_cursor"   : next_cursor
             }
-            if settings.CACHE:
+            if settings.CACHE and not skeleton_key:
                 memcache.set(key, result, settings.CACHE_LIFE)
         else:
             result = cached_data

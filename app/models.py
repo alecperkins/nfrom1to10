@@ -10,8 +10,8 @@ class Vote(db.Model):
     ip              = db.StringProperty()           # ip address of voter
     range           = db.StringProperty()           # number range presented: eg 1-10, 0-9
     
-    def toJSON(self):
-        return {
+    def toJSON(self, full=False):
+        result = {
             "date"          : self.date.isoformat(),
             "number"        : self.number,
             "method"        : self.method,
@@ -20,6 +20,9 @@ class Vote(db.Model):
             "showed_random" : self.showed_random,
             "ip"            : self.ip
         }
+        if full:
+            result["gae_key"] = str(self.key())
+        return result
 
 class Followup(db.Model):
     vote    = db.ReferenceProperty(Vote)

@@ -6,8 +6,8 @@ experiment.
 
 ## App
 
-The app is an AppEngine project, with JavaScript and CSS generated from
-CoffeeScript and Sass.
+The app is an AppEngine project written in Python, with JavaScript and CSS
+generated from CoffeeScript and Sass.
 
 
 ## Posts
@@ -18,4 +18,5 @@ about the experiment, including the media.
 
 ## Tools
 
-There is a sample vote fetching script, `fetch_votes.coffee`, in tools/.
+There is a sample vote fetching script, `fetch_votes.coffee`, in tools/, that
+fetches the votes from the Pick A Number API.

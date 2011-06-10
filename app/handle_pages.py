@@ -75,10 +75,6 @@ class ResultApiHandler(webapp.RequestHandler):
 
 
 
-
-
-
-
 def main():
     application = webapp.WSGIApplication([
                                 ('/',               MainHandler),

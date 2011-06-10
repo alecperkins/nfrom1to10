@@ -1,6 +1,3 @@
-# /data/overview - summary
-# /data/votes?key=KEY
-
 from datetime import datetime, timedelta
 import time
 

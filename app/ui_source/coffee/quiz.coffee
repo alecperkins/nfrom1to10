@@ -65,7 +65,6 @@ class Quiz
             range   : @active_picker.range
         console.log data
         $.post '/vote/', data, (response) =>
-            console.log response
             if response.status is 'success'
                 @vote_id = response.vote_id
                 @showFollowup()
@@ -102,12 +101,11 @@ class Quiz
             $('input[type="text"]').css('opacity','1')
             $('#how .selected').removeClass('selected')
             x.addClass('selected')
-            console.log @followup_how
             @enableSubmitFollowup()
         $('#how').append(x)
         
         for i in [1..3]
-            (=>
+            do =>
                 y_id = i
                 y = renderItem('why', "#{ i }")
                 y.click =>
@@ -116,8 +114,7 @@ class Quiz
                     y.addClass('selected')
                     @enableSubmitFollowup()
                 $('#why').append(y)
-            )()
-        
+
         @els.followup.show()
 
     submitFollowup: =>
@@ -125,9 +122,7 @@ class Quiz
             vote_id : @vote_id
             how     : "#{ @followup_how }"
             why     : "#{ @followup_why }"
-        console.log data
         $.post '/followup/', data, (response) =>
-            console.log response
             if response.status is 'success'
                 @showDone()
         , "json"

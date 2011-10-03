@@ -1,12 +1,10 @@
 (function() {
   var drawGraphs, generated, init, _ref;
-    if ((_ref = window.console) != null) {
-    _ref;
-  } else {
+  if ((_ref = window.console) == null) {
     window.console = {
       log: function() {}
     };
-  };
+  }
   generated = null;
   drawGraphs = function() {
     var graph_boxes, graph_data, graph_opts, i, label, main_data, method, random_specified, res, results, sum, _i, _len, _ref2, _results;

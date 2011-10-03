@@ -22,11 +22,13 @@
     /*
         Class for managing the quiz flow. The whole thing is procedural, really.
         This is just used to namespace everything.
-        */    var t_start;
+        */
+    var t_start;
     t_start = null;
     function Quiz() {
       this.submitFollowup = __bind(this.submitFollowup, this);
-      this.submit = __bind(this.submit, this);      var choice;
+      this.submit = __bind(this.submit, this);
+      var choice;
       if (Math.floor(Math.random() * 2) === 0) {
         this.current_random = true;
         $("h1 > span").text("Pick a random number from 1 to 10");
@@ -48,11 +50,9 @@
       };
       $(this.active_picker).bind('picked', __bind(function() {
         var _ref;
-                if ((_ref = this.t_pick) != null) {
-          _ref;
-        } else {
+        if ((_ref = this.t_pick) == null) {
           this.t_pick = new Date() - t_start;
-        };
+        }
         return this.els.submit_number.attr('disabled', false);
       }, this));
       if (this.active_picker.type === 'slider') {
@@ -67,11 +67,9 @@
     Quiz.prototype.submit = function() {
       var data, _ref;
       console.log(this.active_picker.number);
-            if ((_ref = this.t_submit) != null) {
-        _ref;
-      } else {
+      if ((_ref = this.t_submit) == null) {
         this.t_submit = new Date() - t_start;
-      };
+      }
       data = {
         number: this.active_picker.number,
         method: this.active_picker.type,
@@ -82,7 +80,6 @@
       };
       console.log(data);
       return $.post('/vote/', data, __bind(function(response) {
-        console.log(response);
         if (response.status === 'success') {
           this.vote_id = response.vote_id;
           return this.showFollowup();
@@ -123,12 +120,13 @@
       x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3" placeholder="Please describe the method you used.">');
       x.click(__bind(function() {
         $('#follow-up-how-other').keydown(__bind(function() {
-          return this.followup_how = $('#follow-up-how-other').val();
+          return setTimeout(__bind(function() {
+            return this.followup_how = $('#follow-up-how-other').val();
+          }, this), 1);
         }, this));
         $('input[type="text"]').css('opacity', '1');
         $('#how .selected').removeClass('selected');
         x.addClass('selected');
-        console.log(this.followup_how);
         return this.enableSubmitFollowup();
       }, this));
       $('#how').append(x);
@@ -156,9 +154,7 @@
         how: "" + this.followup_how,
         why: "" + this.followup_why
       };
-      console.log(data);
       return $.post('/followup/', data, __bind(function(response) {
-        console.log(response);
         if (response.status === 'success') {
           return this.showDone();
         }

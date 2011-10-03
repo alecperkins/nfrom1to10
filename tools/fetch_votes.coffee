@@ -1,5 +1,7 @@
 ### 
-Example vote fetching code for the Pick A Number API.
+Example vote fetching code for the Pick A Number API. This is basically the
+exact same script I use to build a local copy of the data for analysis.
+
 http://nfrom1to10.appspot.com/results/api/
 ###
 
@@ -39,6 +41,7 @@ fetchBatch = (cursor) ->
 
                     #####################################
                     # DO SOMETHING WITH THE RESULT HERE #
+                    #   eg: Store in a local database   #
                     #####################################
 
                 # Delay the next request, for rate limiting

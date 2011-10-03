@@ -82,7 +82,7 @@ class Quiz
         for i in [1..4]
             if i is 4
                 i = "#{ i }-#{ @active_picker.type }"
-            (=>
+            do =>
                 x_id = i
                 x = renderItem('how', "#{ i }")
                 x.click =>
@@ -92,12 +92,13 @@ class Quiz
                     x.addClass('selected')
                     @enableSubmitFollowup()
                 $('#how').append(x)
-            )()
         
         x = renderItem('how', 5, '<input id="follow-up-how-other" type="text" style="opacity:0.3" placeholder="Please describe the method you used.">')
         x.click =>
             $('#follow-up-how-other').keydown =>
-                @followup_how = $('#follow-up-how-other').val()
+                setTimeout =>
+                    @followup_how = $('#follow-up-how-other').val()
+                , 1
             $('input[type="text"]').css('opacity','1')
             $('#how .selected').removeClass('selected')
             x.addClass('selected')

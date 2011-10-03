@@ -10,13 +10,25 @@ js_files   = [
 ]
 
 task 'build', 'min js, compile sass', (options) ->
-    commands = ("closure --js_output_file templates/js/#{ file }-min.js --js templates/js/#{ file }.js" for file in js_files)
-    commands.push "compass compile -f -s compressed"
+    doCommand("compass compile -f -s compressed")
 
-    for command in commands
-        exec command, (error, stdout, stderr) ->
-            console.log "stdout: #{ stdout }"
-            console.log "stderr: #{ stderr }"
-            if error?
-                console.log "exec error: #{ error }"
+    js_files.forEach (file) ->
+        coffee_compile = "coffee -c ui_source/coffee/#{ file }.coffee"
+        move_js = "mv ui_source/coffee/#{ file }.js templates/js/#{ file }.js"
+        closure_js = "closure --js_output_file templates/js/#{ file }-min.js --js templates/js/#{ file }.js"
+        doCommand coffee_compile, ->
+            doCommand move_js, ->
+                doCommand closure_js, ->
+                    console.log "processed #{ file }"
+
+
+
+doCommand = (command, callback) ->
+    exec command, (error, stdout, stderr) ->
+        console.log "stdout: #{ stdout }"
+        console.log "stderr: #{ stderr }"
+        if error?
+            console.log "exec error: #{ error }"
+        else
+            callback?()
 
